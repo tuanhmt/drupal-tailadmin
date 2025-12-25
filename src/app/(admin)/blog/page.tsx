@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { drupal } from "@/lib/drupal";
-import Link from "next/link";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import type { DrupalNode } from "next-drupal"
 import { ArticleTeaser } from "@/components/drupal/ArticleTeaser"
@@ -9,9 +8,11 @@ export const metadata: Metadata = {
   description: "A Next.js site powered by a Drupal backend.",
 }
 
-async function getArticles(): Promise<DrupalNode[]> {
+export default async function BlogPage() {
+  let articles: DrupalNode[] = []
+
   try {
-    const nodes = await drupal.getResourceCollection<DrupalNode[]>(
+    articles = await drupal.getResourceCollection<DrupalNode[]>(
       "node--article",
       {
         params: {
@@ -23,17 +24,13 @@ async function getArticles(): Promise<DrupalNode[]> {
         next: {
           revalidate: 3600,
         },
+        cache: "force-cache",
       }
     )
-    return nodes;
   } catch (error) {
-    console.error("Error fetching articles:", error);
-    return [];
+    console.error("Error fetching articles:", error)
+    // articles will remain an empty array, which will show the "No articles found" message
   }
-}
-
-export default async function BlogPage() {
-  const articles = await getArticles();
 
   return (
     <div className="space-y-6">
@@ -53,24 +50,9 @@ export default async function BlogPage() {
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {articles.map((article) => {
-              const createdDate = new Date(
-                // article.attributes.created
-              ).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              });
-
-              const summary =
-                article.body?.summary ||
-                article.body?.value?.substring(0, 150) ||
-                "No summary available";
-
-              return (
-                <ArticleTeaser node={article} />
-              );
-            })}
+            {articles.map((article) => (
+              <ArticleTeaser key={article.id} node={article} />
+            ))}
           </div>
         )}
       </div>

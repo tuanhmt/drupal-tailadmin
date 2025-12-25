@@ -104,15 +104,6 @@ This project includes integration with Drupal via the [next-drupal](https://next
    DRUPAL_PASSWORD=your_password
    ```
 
-   **Note:** The Drupal client is configured to accept self-signed SSL certificates in development (like ddev). This is automatically enabled when `NODE_ENV !== "production"`. To explicitly control this behavior, set:
-
-   ```bash
-   # Set to "true" to accept self-signed certificates (development only!)
-   ACCEPT_SELF_SIGNED_CERTS=true
-   ```
-
-   ⚠️ **Security Warning:** Never use `ACCEPT_SELF_SIGNED_CERTS=true` in production!
-
 3. **Access the Blog page:**
 
    Navigate to `/blog` in your application to view all Drupal article entities. The Blog menu item is available in the sidebar navigation.

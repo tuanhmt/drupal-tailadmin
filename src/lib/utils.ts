@@ -8,5 +8,9 @@ export function formatDate(input: string): string {
 }
 
 export function absoluteUrl(input: string) {
-  return `${process.env.NEXT_PUBLIC_DRUPAL_BASE_URL}${input}`
+  const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL || ''
+  // Remove trailing slash from baseUrl and leading slash from input to avoid double slashes
+  const cleanBaseUrl = baseUrl.replace(/\/$/, '')
+  const cleanInput = input.startsWith('/') ? input : `/${input}`
+  return `${cleanBaseUrl}${cleanInput}`
 }
