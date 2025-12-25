@@ -74,6 +74,49 @@ git clone https://github.com/TailAdmin/free-nextjs-admin-dashboard.git
    yarn dev
    ```
 
+### Drupal Integration
+
+This project includes integration with Drupal via the [next-drupal](https://next-drupal.org/) package.
+
+1. **Install Drupal dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+2. **Configure Drupal connection:**
+
+   Create a `.env.local` file in the root directory:
+
+   ```bash
+   NEXT_PUBLIC_DRUPAL_BASE_URL=https://drupal-nextjs.ddev.site
+   ```
+
+   For authenticated requests, you can also add:
+
+   ```bash
+   # OAuth2 Client Credentials
+   DRUPAL_CLIENT_ID=your_client_id
+   DRUPAL_CLIENT_SECRET=your_client_secret
+
+   # Or Basic Auth
+   DRUPAL_USERNAME=your_username
+   DRUPAL_PASSWORD=your_password
+   ```
+
+   **Note:** The Drupal client is configured to accept self-signed SSL certificates in development (like ddev). This is automatically enabled when `NODE_ENV !== "production"`. To explicitly control this behavior, set:
+
+   ```bash
+   # Set to "true" to accept self-signed certificates (development only!)
+   ACCEPT_SELF_SIGNED_CERTS=true
+   ```
+
+   ⚠️ **Security Warning:** Never use `ACCEPT_SELF_SIGNED_CERTS=true` in production!
+
+3. **Access the Blog page:**
+
+   Navigate to `/blog` in your application to view all Drupal article entities. The Blog menu item is available in the sidebar navigation.
+
 ## Components
 
 TailAdmin is a pre-designed starting point for building a web-based dashboard using Next.js and Tailwind CSS. The template includes:
