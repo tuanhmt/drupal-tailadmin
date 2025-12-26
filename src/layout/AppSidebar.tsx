@@ -45,7 +45,10 @@ const navItems: NavItem[] = [
   {
     icon: <DocsIcon />,
     name: "Blog",
-    path: "/blog",
+    subItems: [
+      { name: "Blog Grid", path: "/blog", pro: false },
+      { name: "Blog Table", path: "/blog-table", pro: false },
+    ],
   },
   {
     name: "Forms",
