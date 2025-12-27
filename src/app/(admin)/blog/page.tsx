@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
-import { drupal } from "@/lib/drupal";
-import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import type { Metadata } from "next"
+import { drupal } from "@/lib/drupal"
+import PageBreadcrumb from "@/components/common/PageBreadCrumb"
 import type { DrupalNode } from "next-drupal"
 import { ArticleTeaser } from "@/components/drupal/ArticleTeaser"
 
@@ -24,7 +24,6 @@ export default async function BlogPage() {
         next: {
           revalidate: 3600,
         },
-        cache: "force-cache",
       }
     )
   } catch (error) {

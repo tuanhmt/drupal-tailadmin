@@ -15,16 +15,12 @@ if (typeof process !== "undefined") {
   }
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL as string
-const clientId = process.env.DRUPAL_CLIENT_ID as string
-const clientSecret = process.env.DRUPAL_CLIENT_SECRET as string
-
-export const drupal = new NextDrupal(baseUrl, {
+export const drupal = new NextDrupal(process.env.NEXT_PUBLIC_DRUPAL_BASE_URL as string, {
   // Enable to use authentication
-  // auth: {
-  //   clientId,
-  //   clientSecret,
-  // },
-  // withAuth: true,
-  // debug: true,
+  auth: {
+    clientId: process.env.DRUPAL_CLIENT_ID as string,
+    clientSecret: process.env.DRUPAL_CLIENT_SECRET as string,
+  },
+  withAuth: true,
+  debug: true,
 })
