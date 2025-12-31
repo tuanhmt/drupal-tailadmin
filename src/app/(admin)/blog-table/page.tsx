@@ -45,6 +45,12 @@ export default function BlogTablePage() {
       );
 
       if (!response.ok) {
+        // Handle authentication errors
+        if (response.status === 401) {
+          // Redirect to login if not authenticated
+          window.location.href = "/login";
+          return;
+        }
         throw new Error("Failed to fetch articles");
       }
 

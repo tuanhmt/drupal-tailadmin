@@ -3,6 +3,7 @@ import { drupal } from "@/lib/drupal"
 import PageBreadcrumb from "@/components/common/PageBreadCrumb"
 import type { DrupalNode } from "next-drupal"
 import { ArticleTeaser } from "@/components/drupal/ArticleTeaser"
+import { getAccessToken } from "@/lib/auth-fetch"
 
 export const metadata: Metadata = {
   description: "A Next.js site powered by a Drupal backend.",
@@ -10,6 +11,8 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   let articles: DrupalNode[] = []
+
+  const accessToken = await getAccessToken();
 
   try {
     articles = await drupal.getResourceCollection<DrupalNode[]>(
@@ -23,6 +26,11 @@ export default async function BlogPage() {
         },
         next: {
           revalidate: 3600,
+        },
+        withAuth: {
+          access_token: accessToken!,
+          token_type: "Bearer",
+          expires_in: 3600,
         },
       }
     )
