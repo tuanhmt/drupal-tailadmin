@@ -1,5 +1,4 @@
 import React from "react";
-import AuthWrapper from "@/components/auth/AuthWrapper";
 import AdminLayoutClient from "./AdminLayoutClient";
 
 /**
@@ -14,8 +13,6 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthWrapper>
-      <AdminLayoutClient>{children}</AdminLayoutClient>
-    </AuthWrapper>
+    <AdminLayoutClient>{children}</AdminLayoutClient>
   );
 }
