@@ -41,18 +41,6 @@ export default async function Ecommerce() {
   const userId = await getUserId();
   const scopes = await getTokenScopes();
 
-  // Example: Fetch protected Drupal data
-  // Uncomment and customize based on your Drupal setup
-  /*
-  try {
-    const response = await authFetch("/jsonapi/user/user");
-    const userData = await response.json();
-    console.log("Authenticated user data:", userData);
-  } catch (error) {
-    console.error("Failed to fetch protected data:", error);
-  }
-  */
-
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
       {/* Optional: Display auth info in development */}

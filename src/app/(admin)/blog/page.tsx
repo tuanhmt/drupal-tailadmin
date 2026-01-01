@@ -24,9 +24,6 @@ export default async function BlogPage() {
           include: "field_image,uid",
           sort: "-created",
         },
-        next: {
-          revalidate: 3600,
-        },
         withAuth: {
           access_token: accessToken!,
           token_type: "Bearer",

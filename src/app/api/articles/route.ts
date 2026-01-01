@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     // Use authenticated Drupal client to fetch articles
     const authDrupal = await getAuthenticatedDrupal();
-    
+
     const searchParams = request.nextUrl.searchParams;
     const page = parseInt(searchParams.get("page") || "1", 10);
     const limit = parseInt(searchParams.get("limit") || "10", 10);
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error("Error fetching articles:", error);
-    
+
     // If not authenticated, return 401
     if (error?.message === "Not authenticated") {
       return NextResponse.json(
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
         { status: 401 }
       );
     }
-    
+
     return NextResponse.json(
       { error: "Failed to fetch articles" },
       { status: 500 }
