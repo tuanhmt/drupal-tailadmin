@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { DrupalNode } from "next-drupal";
-import { getAccessToken } from "@/lib/auth-fetch";
+import { getAccessToken } from "@/lib/auth";
 import { drupal } from "@/lib/drupal";
 
 export async function GET(request: NextRequest) {

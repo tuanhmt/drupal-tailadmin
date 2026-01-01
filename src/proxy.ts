@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getAccessToken } from "./lib/auth";
 
 /**
- * Next.js Middleware
+ * Next.js 16 Proxy
  *
- * IMPORTANT: Middleware runs on Edge Runtime - limited API access
- * - Cannot use Node.js APIs
- * - Cannot call external APIs
- * - Cannot decode/verify JWT tokens
- * - Can only check cookie existence
+ * IMPORTANT: Proxy runs on Node.js Runtime - full API access
+ * - Can use Node.js APIs
+ * - Can call external APIs
+ * - Can decode/verify JWT tokens (if needed)
+ * - Full access to cookies and headers
  *
- * This middleware:
+ * This proxy:
  * 1. Checks if access_token cookie exists
  * 2. Redirects to /signin if missing (except for auth routes)
  * 3. Allows access to auth routes without token
@@ -18,11 +19,11 @@ import type { NextRequest } from "next/server";
  * Security note: This is a lightweight check. Actual token validation
  * and scope checking happens in server components via auth-scope.ts
  */
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow access to auth routes without authentication
-  const authRoutes = ["/signin", "/signup", "/reset-password"];
+  const authRoutes = ["/signin", "/signup", "/reset-password", "/login"];
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
   if (isAuthRoute) {
@@ -30,8 +31,8 @@ export function middleware(request: NextRequest) {
   }
 
   // Check for access_token cookie
-  // In Edge Runtime, we can only check existence, not decode/verify
-  const accessToken = request.cookies.get("access_token");
+  // In Node.js Runtime, we have full access to cookies
+  const accessToken = getAccessToken();
 
   if (!accessToken) {
     // Redirect to signin page if no token
@@ -46,7 +47,7 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Configure which routes this middleware runs on
+// Configure which routes this proxy runs on
 export const config = {
   matcher: [
     /*

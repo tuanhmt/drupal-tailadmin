@@ -5,7 +5,7 @@ import { Article } from "@/components/drupal/Article"
 import { drupal } from "@/lib/drupal"
 import type { Metadata, ResolvingMetadata } from "next"
 import type { DrupalNode, JsonApiParams, JsonApiWithAuthOption } from "next-drupal"
-import { getAccessToken } from "@/lib/auth-fetch"
+import { getAccessToken } from "@/lib/auth"
 
 async function getNode(slug: string[], options?: JsonApiParams & JsonApiWithAuthOption) {
   const path = `/${slug.join("/")}`

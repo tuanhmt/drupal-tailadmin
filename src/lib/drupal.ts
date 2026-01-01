@@ -1,5 +1,5 @@
 import { NextDrupal } from "next-drupal";
-import { getAccessToken } from "./auth-fetch";
+import { getAccessToken } from "./auth";
 import type { Fetcher } from "next-drupal";
 
 /**

@@ -3,7 +3,7 @@ import { drupal } from "@/lib/drupal"
 import PageBreadcrumb from "@/components/common/PageBreadCrumb"
 import type { DrupalNode } from "next-drupal"
 import { ArticleTeaser } from "@/components/drupal/ArticleTeaser"
-import { getAccessToken } from "@/lib/auth-fetch"
+import { getAccessToken } from "@/lib/auth"
 
 export const metadata: Metadata = {
   description: "A Next.js site powered by a Drupal backend.",
