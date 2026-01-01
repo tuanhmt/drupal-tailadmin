@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import type { AccessToken } from "next-drupal";
 
 /**
  * Token Refresh API Route Handler
@@ -55,8 +56,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (!tokenResponse.ok) {
-      // If refresh fails, clear cookies and require re-login
+      // If refresh fails, clear all token cookies and require re-login
       cookieStore.delete("access_token");
+      cookieStore.delete("token_type");
+      cookieStore.delete("expires_in");
       cookieStore.delete("refresh_token");
 
       const errorData = await tokenResponse.json().catch(() => ({}));
@@ -71,9 +74,16 @@ export async function POST(request: NextRequest) {
     }
 
     const tokenData = await tokenResponse.json();
-    const { access_token, refresh_token, expires_in } = tokenData;
 
-    if (!access_token || !refresh_token) {
+    // Validate and type the token response as AccessToken
+    const accessToken: AccessToken = {
+      access_token: tokenData.access_token,
+      token_type: tokenData.token_type || "Bearer",
+      expires_in: tokenData.expires_in || 3600,
+      refresh_token: tokenData.refresh_token,
+    };
+
+    if (!accessToken.access_token || !accessToken.refresh_token) {
       return NextResponse.json(
         { error: "Invalid token response from server" },
         { status: 500 }
@@ -81,11 +91,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate token expiration time
-    const maxAge = expires_in || 3600;
+    const maxAge = accessToken.expires_in || 3600;
 
     // Update cookies with new tokens (refresh token rotation)
     // Old refresh_token is invalidated by Drupal, new one is set
-    cookieStore.set("access_token", access_token, {
+    cookieStore.set("access_token", accessToken.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -93,7 +103,23 @@ export async function POST(request: NextRequest) {
       path: "/",
     });
 
-    cookieStore.set("refresh_token", refresh_token, {
+    cookieStore.set("token_type", accessToken.token_type, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: maxAge,
+      path: "/",
+    });
+
+    cookieStore.set("expires_in", accessToken.expires_in.toString(), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: maxAge,
+      path: "/",
+    });
+
+    cookieStore.set("refresh_token", accessToken.refresh_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -101,10 +127,15 @@ export async function POST(request: NextRequest) {
       path: "/",
     });
 
+    // Return success response with AccessToken (excluding refresh_token for security)
     return NextResponse.json(
       {
         success: true,
-        expires_in: maxAge,
+        token: {
+          access_token: accessToken.access_token,
+          token_type: accessToken.token_type,
+          expires_in: accessToken.expires_in,
+        },
       },
       { status: 200 }
     );

@@ -13,8 +13,10 @@ export async function POST(request: NextRequest) {
   try {
     const cookieStore = await cookies();
 
-    // Clear authentication cookies
+    // Clear all authentication cookies (AccessToken properties)
     cookieStore.delete("access_token");
+    cookieStore.delete("token_type");
+    cookieStore.delete("expires_in");
     cookieStore.delete("refresh_token");
 
     return NextResponse.json(

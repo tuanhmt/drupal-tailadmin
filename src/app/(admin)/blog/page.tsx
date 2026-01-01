@@ -15,6 +15,10 @@ export default async function BlogPage() {
   const accessToken = await getAccessToken();
 
   try {
+    if (!accessToken) {
+      throw new Error("Not authenticated");
+    }
+
     articles = await drupal.getResourceCollection<DrupalNode[]>(
       "node--article",
       {
@@ -24,11 +28,7 @@ export default async function BlogPage() {
           include: "field_image,uid",
           sort: "-created",
         },
-        withAuth: {
-          access_token: accessToken!,
-          token_type: "Bearer",
-          expires_in: 3600,
-        },
+        withAuth: accessToken,
       }
     )
   } catch (error) {

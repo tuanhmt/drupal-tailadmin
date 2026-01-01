@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import type { AccessToken } from "next-drupal";
 
 /**
  * Authenticated Fetch Helper
@@ -16,8 +17,7 @@ export async function authFetch(
   path: string,
   options: RequestInit = {}
 ): Promise<Response> {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("access_token")?.value;
+  const accessToken = await getAccessToken();
 
   if (!accessToken) {
     throw new Error("Not authenticated");
@@ -38,7 +38,7 @@ export async function authFetch(
     ...options,
     headers: {
       ...options.headers,
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `${accessToken.token_type} ${accessToken.access_token}`,
       "Content-Type": "application/json",
     },
   });
@@ -55,12 +55,34 @@ export async function authFetch(
 }
 
 /**
- * Helper to get access token for use with NextDrupal client
+ * Get the full AccessToken object from cookies
  *
- * NextDrupal can accept a custom fetch function, but for simplicity,
- * we can also just get the token and pass it to NextDrupal's auth option.
+ * Returns the complete AccessToken with all properties (access_token, token_type, expires_in, refresh_token)
  */
-export async function getAccessToken(): Promise<string | null> {
+export async function getAccessToken(): Promise<AccessToken | null> {
   const cookieStore = await cookies();
-  return cookieStore.get("access_token")?.value || null;
+
+  const accessToken = cookieStore.get("access_token")?.value;
+  const tokenType = cookieStore.get("token_type")?.value || "Bearer";
+  const expiresIn = cookieStore.get("expires_in")?.value;
+  const refreshToken = cookieStore.get("refresh_token")?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  return {
+    access_token: accessToken,
+    token_type: tokenType,
+    expires_in: expiresIn ? parseInt(expiresIn, 10) : 3600,
+    refresh_token: refreshToken,
+  };
+}
+
+/**
+ * Get just the access token string (for backward compatibility)
+ */
+export async function getAccessTokenString(): Promise<string | null> {
+  const token = await getAccessToken();
+  return token?.access_token || null;
 }

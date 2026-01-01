@@ -34,39 +34,5 @@ function createDrupalFetcher(): Fetcher {
 export const drupal = new NextDrupal(
   process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!,
   {
-    fetcher: createDrupalFetcher(),
   }
 );
-
-/**
- * Get authenticated Drupal client
- *
- * Returns a NextDrupal instance configured with the current access token.
- * Use this in Server Components for authenticated requests.
- *
- * Example:
- * const authDrupal = await getAuthenticatedDrupal();
- * const articles = await authDrupal.getResourceCollection("node--article");
- */
-export async function getAuthenticatedDrupal(): Promise<NextDrupal> {
-  const accessToken = await getAccessToken();
-
-  if (!accessToken) {
-    throw new Error("Not authenticated");
-  }
-
-  // NextDrupal can accept a custom fetch function with auth headers
-  const authDrupal = new NextDrupal(
-    process.env.NEXT_PUBLIC_DRUPAL_BASE_URL!,
-    {
-      auth: {
-        access_token: accessToken,
-        token_type: "Bearer",
-        expires_in: 3600,
-      },
-      fetcher: createDrupalFetcher(),
-    }
-  );
-
-  return authDrupal;
-}
