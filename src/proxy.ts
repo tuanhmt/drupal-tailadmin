@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getAccessToken } from "./lib/auth";
+import { getAccessToken } from "./lib/auth/oauth2/get-access-token";
 
 /**
  * Next.js 16 Proxy

@@ -102,24 +102,9 @@ export async function POST(request: NextRequest) {
     // SameSite=Lax provides CSRF protection while allowing navigation
     const cookieStore = await cookies();
 
-    // Store AccessToken properties in separate cookies
+    // Store only access_token and refresh_token in cookies
+    // token_type and expires_in are not stored (use defaults when needed)
     cookieStore.set("access_token", accessToken.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: maxAge,
-      path: "/",
-    });
-
-    cookieStore.set("token_type", accessToken.token_type, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: maxAge,
-      path: "/",
-    });
-
-    cookieStore.set("expires_in", accessToken.expires_in.toString(), {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
