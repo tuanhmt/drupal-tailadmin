@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
-import { drupal } from "@/lib/drupal"
+import { drupal } from "@/lib/drupal/client"
 import PageBreadcrumb from "@/components/common/PageBreadCrumb"
 import type { DrupalNode } from "next-drupal"
 import { ArticleTeaser } from "@/components/drupal/ArticleTeaser"
-import { getAccessToken } from "@/lib/auth/oauth2/get-access-token"
+import { getAccessToken } from "@/lib/auth/token"
 
 export const metadata: Metadata = {
   description: "A Next.js site powered by a Drupal backend.",

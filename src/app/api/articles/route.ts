@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { DrupalNode } from "next-drupal";
-import { getAccessToken } from "@/lib/auth/oauth2/get-access-token";
-import { drupal } from "@/lib/drupal";
+import { getAccessToken } from "@/lib/auth/token";
+import { drupal } from "@/lib/drupal/client";
 
 export async function GET(request: NextRequest) {
   try {

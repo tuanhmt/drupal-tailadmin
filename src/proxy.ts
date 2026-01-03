@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { getAccessToken } from "./lib/auth/oauth2/get-access-token";
 
 /**
  * Next.js 16 Proxy
@@ -32,7 +31,7 @@ export default function proxy(request: NextRequest) {
 
   // Check for access_token cookie
   // In Node.js Runtime, we have full access to cookies
-  const accessToken = getAccessToken();
+  const accessToken = request.cookies.get("access_token")?.value;
 
   if (!accessToken) {
     // Redirect to signin page if no token

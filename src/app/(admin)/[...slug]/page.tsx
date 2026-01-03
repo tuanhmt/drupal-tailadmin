@@ -2,9 +2,9 @@ import { draftMode } from "next/headers"
 import { notFound } from "next/navigation"
 import { getDraftData } from "next-drupal/draft"
 import { Article } from "@/components/drupal/Article"
-import { drupal } from "@/lib/drupal"
+import { drupal } from "@/lib/drupal/client"
 import type { DrupalNode, JsonApiParams, JsonApiWithAuthOption } from "next-drupal"
-import { getAccessToken } from "@/lib/auth/oauth2/get-access-token"
+import { getAccessToken } from "@/lib/auth/token"
 
 async function getNode(slug: string[], options?: JsonApiParams & JsonApiWithAuthOption) {
   const path = `/${slug.join("/")}`

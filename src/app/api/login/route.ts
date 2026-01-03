@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { AccessToken } from "next-drupal";
+import { OAuthTokenResponse, setAuthCookies } from "@/lib/auth/cookies";
 
 /**
  * Login API Route Handler
@@ -77,58 +78,21 @@ export async function POST(request: NextRequest) {
 
     const tokenData = await tokenResponse.json();
 
-    // Validate and type the token response as AccessToken
-    const accessToken: AccessToken = {
+    const accessToken: OAuthTokenResponse = {
       access_token: tokenData.access_token,
-      token_type: tokenData.token_type || "Bearer",
-      expires_in: tokenData.expires_in || 3600,
       refresh_token: tokenData.refresh_token,
+      expires_in: tokenData.expires_in,
+      token_type: tokenData.token_type,
+      scope: tokenData.scope,
     };
 
-    if (!accessToken.access_token || !accessToken.refresh_token) {
-      return NextResponse.json(
-        { error: "Invalid token response from server" },
-        { status: 500 }
-      );
-    }
-
-    // Calculate token expiration time
-    // expires_in is typically in seconds (e.g., 3600 for 1 hour)
-    const maxAge = accessToken.expires_in || 3600; // Default to 1 hour if not provided
-
-    // Set HttpOnly cookies with secure settings
-    // HttpOnly prevents JavaScript access (XSS protection)
-    // Secure ensures cookies only sent over HTTPS (production)
-    // SameSite=Lax provides CSRF protection while allowing navigation
-    const cookieStore = await cookies();
-
-    // Store only access_token and refresh_token in cookies
-    // token_type and expires_in are not stored (use defaults when needed)
-    cookieStore.set("access_token", accessToken.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: maxAge,
-      path: "/",
-    });
-
-    cookieStore.set("refresh_token", accessToken.refresh_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30, // 30 days for refresh token
-      path: "/",
-    });
+    await setAuthCookies(accessToken);
 
     // Return success response with AccessToken (excluding refresh_token for security)
     return NextResponse.json(
       {
         success: true,
-        token: {
-          access_token: accessToken.access_token,
-          token_type: accessToken.token_type,
-          expires_in: accessToken.expires_in,
-        },
+        token: accessToken
       },
       { status: 200 }
     );
