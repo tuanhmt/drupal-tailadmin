@@ -22,7 +22,7 @@ export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow access to auth routes without authentication
-  const authRoutes = ["/signin", "/signup", "/reset-password", "/login"];
+  const authRoutes = ["/signin", "/signup", "/reset-password"];
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
   if (isAuthRoute) {

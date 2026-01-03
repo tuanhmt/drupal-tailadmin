@@ -5,6 +5,7 @@ import { Article } from "@/components/drupal/Article"
 import { drupal } from "@/lib/drupal/client"
 import type { DrupalNode, JsonApiParams, JsonApiWithAuthOption } from "next-drupal"
 import { getAccessToken } from "@/lib/auth/token"
+import { AccessToken } from "next-drupal"
 
 async function getNode(slug: string[], options?: JsonApiParams & JsonApiWithAuthOption) {
   const path = `/${slug.join("/")}`
@@ -72,10 +73,16 @@ export default async function NodePage(props: NodePageProps) {
     throw new Error("Not authenticated")
   }
 
+  const accessTokenObject: AccessToken = {
+    access_token: accessToken!,
+    token_type: "Bearer",
+    expires_in: 3600,
+  };
+
   let node
   try {
     node = await getNode(slug, {
-      withAuth: accessToken,
+      withAuth: accessTokenObject,
     })
   } catch (error) {
     // If getNode throws an error, tell Next.js the path is 404.

@@ -44,6 +44,9 @@ importers:
       autoprefixer:
         specifier: ^10.4.22
         version: 10.4.23(postcss@8.5.6)
+      drupal-jsonapi-params:
+        specifier: ^3.0.0
+        version: 3.0.0
       flatpickr:
         specifier: ^4.6.13
         version: 4.6.13
@@ -1762,6 +1765,9 @@ packages:
 
   dot-case@3.0.4:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==, tarball: https://registry.npmjs.org/dot-case/-/dot-case-3.0.4.tgz}
+
+  drupal-jsonapi-params@3.0.0:
+    resolution: {integrity: sha512-/Sc7ZxcpmC4dCNuJpn6fUdT+79toc2GIoTJ4eevBJA1m1TSRnuVk+i4UDWNunqcR0CC94HrA9DyqUigix4fdkQ==, tarball: https://registry.npmjs.org/drupal-jsonapi-params/-/drupal-jsonapi-params-3.0.0.tgz}
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==, tarball: https://registry.npmjs.org/dunder-proto/-/dunder-proto-1.0.1.tgz}
@@ -4756,6 +4762,10 @@ snapshots:
     dependencies:
       no-case: 3.0.4
       tslib: 2.8.1
+
+  drupal-jsonapi-params@3.0.0:
+    dependencies:
+      qs: 6.14.0
 
   dunder-proto@1.0.1:
     dependencies:
