@@ -11,8 +11,8 @@ export const AUTH_COOKIES = {
  * Default cookie options for setting authentication cookies.
  */
 export const AUTH_COOKIE_OPTIONS = {
-    HTTP_ONLY: process.env.NODE_ENV === 'production',
+    HTTP_ONLY: true,
     MAX_AGE: 24 * 60 * 60, // 24 hours in seconds
     SAME_SITE: 'lax',
-    SECURE: process.env.NODE_ENV === 'production',
+    SECURE: true,
 } as const;

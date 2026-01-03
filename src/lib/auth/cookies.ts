@@ -23,17 +23,21 @@ export interface OAuthTokenResponse {
 export async function setAuthCookies(token: OAuthTokenResponse): Promise<void> {
     const cookieStore = await cookies();
 
-    cookieStore.set(
-        AUTH_COOKIES.ACCESS_TOKEN,
-        token.access_token,
-        { ...AUTH_COOKIE_OPTIONS, path: "/" }
-    );
+    cookieStore.set(AUTH_COOKIES.ACCESS_TOKEN, token.access_token, {
+        httpOnly: AUTH_COOKIE_OPTIONS.HTTP_ONLY,
+        maxAge: AUTH_COOKIE_OPTIONS.MAX_AGE,
+        path: '/',
+        sameSite: AUTH_COOKIE_OPTIONS.SAME_SITE,
+        secure: AUTH_COOKIE_OPTIONS.SECURE,
+    });
 
-    cookieStore.set(
-        AUTH_COOKIES.REFRESH_TOKEN,
-        token.refresh_token,
-        { ...AUTH_COOKIE_OPTIONS, path: "/api/refresh" }
-    );
+    cookieStore.set(AUTH_COOKIES.REFRESH_TOKEN, token.refresh_token, {
+        httpOnly: AUTH_COOKIE_OPTIONS.HTTP_ONLY,
+        maxAge: AUTH_COOKIE_OPTIONS.MAX_AGE,
+        path: '/',
+        sameSite: AUTH_COOKIE_OPTIONS.SAME_SITE,
+        secure: AUTH_COOKIE_OPTIONS.SECURE,
+    });
 }
 
 /**
