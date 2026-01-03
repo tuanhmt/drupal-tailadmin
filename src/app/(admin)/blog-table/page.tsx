@@ -32,13 +32,13 @@ export default function BlogTablePage() {
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   const itemsPerPage = 10;
 
   const fetchArticles = async (page: number) => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const response = await fetch(
         `/api/articles?page=${page}&limit=${itemsPerPage}`
@@ -55,7 +55,7 @@ export default function BlogTablePage() {
       }
 
       const result: ArticlesResponse = await response.json();
-      
+
       setArticles(result.data);
       setTotalItems(result.pagination.total);
       setTotalPages(result.pagination.totalPages);
@@ -109,10 +109,10 @@ export default function BlogTablePage() {
           </div>
         ) : (
           <>
-            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/3 dark:bg-white/3">
               <div className="max-w-full overflow-x-auto">
                 <Table>
-                  <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+                  <TableHeader className="border-b border-gray-100 dark:border-white/5">
                     <TableRow>
                       <TableCell
                         isHeader
@@ -147,7 +147,7 @@ export default function BlogTablePage() {
                     </TableRow>
                   </TableHeader>
 
-                  <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                  <TableBody className="divide-y divide-gray-100 dark:divide-white/5">
                     {articles.map((article) => (
                       <TableRow key={article.id}>
                         <TableCell className="px-5 py-4 sm:px-6 text-start">
