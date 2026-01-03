@@ -1,40 +1,77 @@
+"use client";
 import type { Metadata } from "next"
-import { drupal } from "@/lib/drupal/client"
 import PageBreadcrumb from "@/components/common/PageBreadCrumb"
 import type { DrupalNode } from "next-drupal"
 import { ArticleTeaser } from "@/components/drupal/ArticleTeaser"
-import { getAccessToken } from "@/lib/auth/token"
+import { useState, useEffect } from "react";
+import { NextResponse } from "next/server";
+import Pagination from "@/components/tables/Pagination";
 
-export const metadata: Metadata = {
-  description: "A Next.js site powered by a Drupal backend.",
+interface ArticlesResponse {
+  data: DrupalNode[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
-export default async function BlogPage() {
-  let articles: DrupalNode[] = []
 
-  const accessToken = await getAccessToken();
+export default function BlogPage() {
+  const [articles, setArticles] = useState<DrupalNode[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  try {
-    if (!accessToken) {
-      throw new Error("Not authenticated");
-    }
+  const itemsPerPage = 10;
 
-    articles = await drupal.getResourceCollection<DrupalNode[]>(
-      "node--article",
-      {
-        params: {
-          "filter[status]": 1,
-          "fields[node--article]": "title,path,field_image,uid,created",
-          include: "field_image,uid",
-          sort: "-created",
-        },
-        withAuth: accessToken,
+  const fetchArticles = async (page: number) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        `/api/articles?page=${page}&limit=${itemsPerPage}`
+      );
+
+      if (!response.ok) {
+        // Handle authentication errors
+        if (response.status === 401) {
+          // Redirect to login if not authenticated
+          return NextResponse.redirect("/signin");
+        }
+        throw new Error("Failed to fetch articles");
       }
-    )
-  } catch (error) {
-    console.error("Error fetching articles:", error)
-    // articles will remain an empty array, which will show the "No articles found" message
-  }
+
+      const result: ArticlesResponse = await response.json();
+
+      setArticles(result.data);
+      setTotalItems(result.pagination.total);
+      setTotalPages(result.pagination.totalPages);
+    } catch (err) {
+      console.error("Error fetching articles:", err);
+      setError("Failed to load articles. Please try again.");
+      setArticles([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchArticles(currentPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + articles.length;
 
   return (
     <div className="space-y-6">
@@ -45,7 +82,15 @@ export default async function BlogPage() {
           Blog Articles
         </h1>
 
-        {articles.length === 0 ? (
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-gray-400">Loading articles...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-red-500 dark:text-red-400">{error}</p>
+          </div>
+        ) : articles.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 dark:text-gray-400">
               No articles found. Make sure your Drupal site is accessible and
@@ -60,7 +105,19 @@ export default async function BlogPage() {
           </div>
         )}
       </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-1 mt-6">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
+            Showing {startIndex + 1} to {endIndex} of {totalItems} entries
+          </div>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
     </div>
   );
 }
-

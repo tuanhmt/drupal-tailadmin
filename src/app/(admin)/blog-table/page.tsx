@@ -14,6 +14,7 @@ import Pagination from "@/components/tables/Pagination";
 import { formatDate, absoluteUrl } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { NextResponse } from "next/server";
 
 interface ArticlesResponse {
   data: DrupalNode[];
@@ -48,8 +49,7 @@ export default function BlogTablePage() {
         // Handle authentication errors
         if (response.status === 401) {
           // Redirect to login if not authenticated
-          window.location.href = "/login";
-          return;
+          return NextResponse.redirect("/signin");
         }
         throw new Error("Failed to fetch articles");
       }
