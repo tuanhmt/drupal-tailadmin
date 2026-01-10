@@ -10,6 +10,7 @@ export interface OAuthTokenResponse {
     expires_in: number;
     token_type: "Bearer";
     scope?: string;
+    username?: string; // Store username for fetching user info
 }
 
 /**
@@ -38,6 +39,17 @@ export async function setAuthCookies(token: OAuthTokenResponse): Promise<void> {
         sameSite: AUTH_COOKIE_OPTIONS.SAME_SITE,
         secure: AUTH_COOKIE_OPTIONS.SECURE,
     });
+
+    // Store username if provided (for fetching user info)
+    if (token.username) {
+        cookieStore.set(AUTH_COOKIES.USERNAME, token.username, {
+            httpOnly: false, // Allow client-side access for display
+            maxAge: AUTH_COOKIE_OPTIONS.MAX_AGE,
+            path: '/',
+            sameSite: AUTH_COOKIE_OPTIONS.SAME_SITE,
+            secure: AUTH_COOKIE_OPTIONS.SECURE,
+        });
+    }
 }
 
 /**
@@ -49,4 +61,13 @@ export async function clearAuthCookies(): Promise<void> {
 
     cookieStore.delete(AUTH_COOKIES.ACCESS_TOKEN);
     cookieStore.delete(AUTH_COOKIES.REFRESH_TOKEN);
+    cookieStore.delete(AUTH_COOKIES.USERNAME);
+}
+
+/**
+ * Gets the stored username from cookies.
+ */
+export async function getUsername(): Promise<string | null> {
+    const cookieStore = await cookies();
+    return cookieStore.get(AUTH_COOKIES.USERNAME)?.value ?? null;
 }

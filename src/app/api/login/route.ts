@@ -84,6 +84,7 @@ export async function POST(request: NextRequest) {
       expires_in: tokenData.expires_in,
       token_type: tokenData.token_type,
       scope: tokenData.scope,
+      username: username, // Store username for fetching user info
     };
 
     await setAuthCookies(accessToken);

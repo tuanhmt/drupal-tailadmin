@@ -5,8 +5,20 @@ import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
+import { formatDate } from "@/lib/utils";
 
-export default function UserInfoCard() {
+interface UserInfoCardProps {
+  user?: {
+    name?: string;
+    email?: string;
+    mail?: string;
+    created?: number;
+    changed?: number;
+    [key: string]: any;
+  };
+}
+
+export default function UserInfoCard({ user }: UserInfoCardProps) {
   const { isOpen, openModal, closeModal } = useModal();
   const handleSave = () => {
     // Handle save logic here
@@ -24,19 +36,10 @@ export default function UserInfoCard() {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                First Name
+                Username
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Musharof
-              </p>
-            </div>
-
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Last Name
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Chowdhury
+                {user?.name || "N/A"}
               </p>
             </div>
 
@@ -45,25 +48,49 @@ export default function UserInfoCard() {
                 Email address
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                randomuser@pimjo.com
+                {user?.email || user?.mail || "N/A"}
               </p>
             </div>
 
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Phone
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                +09 363 398 46
-              </p>
-            </div>
+            {user?.created && (
+              <div>
+                <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                  Created
+                </p>
+                <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                  {formatDate(user.created)}
+                </p>
+              </div>
+            )}
+
+            {user?.changed && (
+              <div>
+                <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                  Last Updated
+                </p>
+                <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                  {formatDate(user.changed)}
+                </p>
+              </div>
+            )}
+
+            {user?.timezone && (
+              <div>
+                <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                  Timezone
+                </p>
+                <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                  {user.timezone}
+                </p>
+              </div>
+            )}
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Bio
+                Status
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Team Manager
+                {user?.status ? "Active" : "Blocked"}
               </p>
             </div>
           </div>
@@ -147,29 +174,21 @@ export default function UserInfoCard() {
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div className="col-span-2 lg:col-span-1">
-                    <Label>First Name</Label>
-                    <Input type="text" defaultValue="Musharof" />
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Last Name</Label>
-                    <Input type="text" defaultValue="Chowdhury" />
+                    <Label>Username</Label>
+                    <Input type="text" defaultValue={user?.name || ""} />
                   </div>
 
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Email Address</Label>
-                    <Input type="text" defaultValue="randomuser@pimjo.com" />
+                    <Input type="email" defaultValue={user?.email || user?.mail || ""} />
                   </div>
 
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Phone</Label>
-                    <Input type="text" defaultValue="+09 363 398 46" />
-                  </div>
-
-                  <div className="col-span-2">
-                    <Label>Bio</Label>
-                    <Input type="text" defaultValue="Team Manager" />
-                  </div>
+                  {user?.timezone && (
+                    <div className="col-span-2 lg:col-span-1">
+                      <Label>Timezone</Label>
+                      <Input type="text" defaultValue={user.timezone} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,10 +1,11 @@
-export function formatDate(input: string): string {
-  const date = new Date(input)
+export function formatDate(input: string | number): string {
+  // Handle Drupal timestamps (milliseconds) or ISO date strings
+  const date = typeof input === "number" ? new Date(input) : new Date(input);
   return date.toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
-  })
+  });
 }
 
 export function absoluteUrl(input: string) {

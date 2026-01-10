@@ -1,11 +1,12 @@
-import { Outfit } from 'next/font/google';
+import { Raleway } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 
-const outfit = Outfit({
+const raleway = Raleway({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export default function RootLayout({
@@ -15,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${outfit.className} dark:bg-gray-900`} suppressHydrationWarning>
+      <body className={`${raleway.className} dark:bg-gray-900`} suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
             __html: `
