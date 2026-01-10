@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { clearAuthCookies } from "@/lib/auth/cookies";
 
 /**
  * Logout API Route Handler
@@ -11,14 +12,7 @@ import { cookies } from "next/headers";
  */
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-
-    // Clear all authentication cookies (AccessToken properties)
-    cookieStore.delete("access_token");
-    cookieStore.delete("token_type");
-    cookieStore.delete("expires_in");
-    cookieStore.delete("refresh_token");
-
+    await clearAuthCookies();
     return NextResponse.json(
       { success: true },
       { status: 200 }

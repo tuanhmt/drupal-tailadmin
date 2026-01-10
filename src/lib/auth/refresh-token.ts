@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import type { AccessToken } from "next-drupal";
+import { clearAuthCookies, OAuthTokenResponse, setAuthCookies } from "./cookies";
 
 /**
  * Refreshes the OAuth2 access token using the refresh token.
@@ -44,62 +45,21 @@ export async function refreshAccessToken(): Promise<AccessToken | null> {
 
     if (!tokenResponse.ok) {
       // If refresh fails, clear all token cookies
-      cookieStore.delete("access_token");
-      cookieStore.delete("token_type");
-      cookieStore.delete("expires_in");
-      cookieStore.delete("refresh_token");
+      await clearAuthCookies();
       return null;
     }
 
     const tokenData = await tokenResponse.json();
 
     // Validate and type the token response as AccessToken
-    const accessToken: AccessToken = {
+    const accessToken: OAuthTokenResponse = {
       access_token: tokenData.access_token,
-      token_type: tokenData.token_type || "Bearer",
-      expires_in: tokenData.expires_in || 3600,
       refresh_token: tokenData.refresh_token,
+      expires_in: tokenData.expires_in,
+      token_type: tokenData.token_type,
     };
 
-    if (!accessToken.access_token || !accessToken.refresh_token) {
-      return null;
-    }
-
-    // Calculate token expiration time
-    const maxAge = accessToken.expires_in || 3600;
-
-    // Update cookies with new tokens (refresh token rotation)
-    cookieStore.set("access_token", accessToken.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: maxAge,
-      path: "/",
-    });
-
-    cookieStore.set("token_type", accessToken.token_type, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: maxAge,
-      path: "/",
-    });
-
-    cookieStore.set("expires_in", accessToken.expires_in.toString(), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: maxAge,
-      path: "/",
-    });
-
-    cookieStore.set("refresh_token", accessToken.refresh_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-      path: "/",
-    });
+    await setAuthCookies(accessToken);
 
     return accessToken;
   } catch (error) {
