@@ -4,7 +4,8 @@
 
 @theme {
   --font-*: initial;
-  --font-outfit: Questrial, sans-serif;
+  /* --font-outfit: Questrial, sans-serif; */
+  --font-questrial: Questrial, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
@@ -188,7 +189,7 @@
     cursor: pointer;
   }
   body {
-    @apply relative font-normal font-outfit z-1 bg-gray-50;
+    @apply relative font-normal font-questrial z-1 bg-gray-50;
   }
 }
 
