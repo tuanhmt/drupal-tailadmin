@@ -1,10 +1,10 @@
-import { Raleway } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 
-const raleway = Raleway({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${raleway.className} dark:bg-gray-900`} suppressHydrationWarning>
+      <body className={`${inter.className} dark:bg-gray-900`} suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
             __html: `

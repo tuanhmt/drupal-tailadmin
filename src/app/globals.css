@@ -4,7 +4,7 @@
 
 @theme {
   --font-*: initial;
-  --font-outfit: Raleway, sans-serif;
+  --font-outfit: Inter, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
@@ -250,6 +250,123 @@
 
 @utility menu-dropdown-badge-inactive {
   @apply bg-brand-50 group-hover:bg-brand-100 dark:bg-brand-500/15 dark:group-hover:bg-brand-500/20;
+}
+
+/* Button Base Styles */
+@utility btn {
+  @apply inline-flex items-center justify-center font-medium gap-2 rounded-lg transition focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+/* Button Sizes */
+@utility btn-sm {
+  @apply px-4 py-3 text-sm;
+}
+
+@utility btn-md {
+  @apply px-5 py-3.5 text-sm;
+}
+
+@utility btn-lg {
+  @apply px-6 py-4 text-base;
+}
+
+@utility btn-xl {
+  @apply px-8 py-5 text-lg;
+}
+
+/* Button Variants - Primary */
+@utility btn-primary {
+  @apply bg-brand-500 text-white shadow-theme-xs hover:bg-brand-600 active:bg-brand-700 focus:ring-brand-500/20 dark:bg-brand-500 dark:hover:bg-brand-600 dark:active:bg-brand-700;
+}
+
+@utility btn-primary-disabled {
+  @apply bg-brand-300 text-white cursor-not-allowed opacity-50 dark:bg-brand-800 dark:text-gray-400;
+}
+
+/* Button Variants - Secondary */
+@utility btn-secondary {
+  @apply bg-gray-100 text-gray-700 shadow-theme-xs hover:bg-gray-200 active:bg-gray-300 focus:ring-gray-500/20 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:active:bg-gray-600;
+}
+
+@utility btn-secondary-disabled {
+  @apply bg-gray-100 text-gray-400 cursor-not-allowed opacity-50 dark:bg-gray-800 dark:text-gray-500;
+}
+
+/* Button Variants - Outline */
+@utility btn-outline {
+  @apply bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 active:bg-gray-100 focus:ring-gray-500/20 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/3 dark:hover:text-gray-300 dark:active:bg-white/5;
+}
+
+@utility btn-outline-disabled {
+  @apply bg-white text-gray-400 ring-gray-200 cursor-not-allowed opacity-50 dark:bg-gray-800 dark:text-gray-500 dark:ring-gray-700;
+}
+
+/* Button Variants - Ghost */
+@utility btn-ghost {
+  @apply bg-transparent text-gray-700 hover:bg-gray-100 active:bg-gray-200 focus:ring-gray-500/20 dark:text-gray-300 dark:hover:bg-white/5 dark:active:bg-white/10;
+}
+
+@utility btn-ghost-disabled {
+  @apply bg-transparent text-gray-400 cursor-not-allowed opacity-50 dark:text-gray-500;
+}
+
+/* Button Variants - Danger */
+@utility btn-danger {
+  @apply bg-error-500 text-white shadow-theme-xs hover:bg-error-600 active:bg-error-700 focus:ring-error-500/20 dark:bg-error-500 dark:hover:bg-error-600 dark:active:bg-error-700;
+}
+
+@utility btn-danger-disabled {
+  @apply bg-error-300 text-white cursor-not-allowed opacity-50 dark:bg-error-800 dark:text-gray-400;
+}
+
+/* Button Variants - Success */
+@utility btn-success {
+  @apply bg-success-500 text-white shadow-theme-xs hover:bg-success-600 active:bg-success-700 focus:ring-success-500/20 dark:bg-success-500 dark:hover:bg-success-600 dark:active:bg-success-700;
+}
+
+@utility btn-success-disabled {
+  @apply bg-success-300 text-white cursor-not-allowed opacity-50 dark:bg-success-800 dark:text-gray-400;
+}
+
+/* Button Variants - Warning */
+@utility btn-warning {
+  @apply bg-warning-500 text-white shadow-theme-xs hover:bg-warning-600 active:bg-warning-700 focus:ring-warning-500/20 dark:bg-warning-500 dark:hover:bg-warning-600 dark:active:bg-warning-700;
+}
+
+@utility btn-warning-disabled {
+  @apply bg-warning-300 text-white cursor-not-allowed opacity-50 dark:bg-warning-800 dark:text-gray-400;
+}
+
+/* Button Variants - Link */
+@utility btn-link {
+  @apply bg-transparent text-brand-500 hover:text-brand-600 active:text-brand-700 underline-offset-4 hover:underline focus:ring-brand-500/20 dark:text-brand-400 dark:hover:text-brand-300;
+}
+
+@utility btn-link-disabled {
+  @apply bg-transparent text-gray-400 cursor-not-allowed opacity-50 dark:text-gray-500;
+}
+
+/* Button Icon Styles */
+@utility btn-icon {
+  @apply flex items-center justify-center;
+}
+
+@utility btn-icon-start {
+  @apply flex items-center -ml-1;
+}
+
+@utility btn-icon-end {
+  @apply flex items-center -mr-1;
+}
+
+/* Button Full Width */
+@utility btn-full {
+  @apply w-full;
+}
+
+/* Button Loading State */
+@utility btn-loading {
+  @apply pointer-events-none opacity-75;
 }
 
 @utility no-scrollbar {

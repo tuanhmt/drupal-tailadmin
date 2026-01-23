@@ -14,6 +14,9 @@ import Pagination from "@/components/tables/Pagination";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import Button from "@/components/ui/button/Button";
+import EyeIcon from "@/icons/eye.svg";
+import PencilIcon from "@/icons/pencil.svg";
+import TrashBinIcon from "@/icons/trash.svg";
 
 interface EntityResponse {
   data: any[];
@@ -285,26 +288,28 @@ export default function EntityListPage({
                           {getCreatedDate(entity) || "-"}
                         </TableCell>
                         <TableCell className="px-4 py-3 text-start">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-3">
                             <Link
                               href={`/${entityType}/${entity.id}/view`}
-                              className="text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300"
+                              className="inline-flex items-center justify-center text-gray-600 hover:text-brand-500 focus:outline-hidden dark:text-gray-400 dark:hover:text-brand-400 transition"
+                              aria-label="View"
                             >
-                              View
+                              <EyeIcon className="w-5 h-5" />
                             </Link>
-                            <span className="text-gray-300">|</span>
                             <Link
                               href={`/${entityType}/${entity.id}/edit`}
-                              className="text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-brand-400 dark:hover:text-brand-300"
+                              className="inline-flex items-center justify-center text-gray-600 hover:text-brand-500 focus:outline-hidden dark:text-gray-400 dark:hover:text-brand-400 transition"
+                              aria-label="Edit"
                             >
-                              Edit
+                              <PencilIcon className="w-5 h-5" />
                             </Link>
-                            <span className="text-gray-300">|</span>
                             <button
+                              type="button"
                               onClick={() => handleDelete(entity.id)}
-                              className="text-sm font-medium text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300"
+                              className="inline-flex items-center justify-center text-gray-600 hover:text-red-600 focus:outline-hidden dark:text-gray-400 dark:hover:text-red-400 transition"
+                              aria-label="Delete"
                             >
-                              Delete
+                              <TrashBinIcon className="w-5 h-5" />
                             </button>
                           </div>
                         </TableCell>
