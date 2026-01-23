@@ -4,7 +4,7 @@
 
 @theme {
   --font-*: initial;
-  --font-outfit: Inter, sans-serif;
+  --font-outfit: Questrial, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;

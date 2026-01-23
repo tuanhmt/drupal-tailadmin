@@ -34,10 +34,10 @@ const navItems: NavItem[] = [
   // },
   {
     icon: <DocsIcon />,
-    name: "Content Management",
+    name: "Quản lý đơn hàng",
     subItems: [
-      { name: "Articles", path: "/articles", pro: false },
-      { name: "Users", path: "/users", pro: false },
+      { name: "Bài viết", path: "/articles", pro: false },
+      { name: "Người dùng", path: "/users", pro: false },
     ],
   },
   {
