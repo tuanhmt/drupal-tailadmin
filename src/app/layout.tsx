@@ -1,12 +1,12 @@
-import { Questrial } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 
-const questrial = Questrial({
-  subsets: ["latin"],
-  weight: "400",
+const inter = Inter({
+  subsets: ["latin", "vietnamese"],
+  weight: ["300", "400", "500", "600", "700", "800"]
 });
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${questrial.className} dark:bg-gray-900`} suppressHydrationWarning>
+      <body className={`${inter.className} dark:bg-gray-900`} suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
             __html: `

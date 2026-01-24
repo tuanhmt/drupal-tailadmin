@@ -38,6 +38,7 @@ const navItems: NavItem[] = [
     subItems: [
       { name: "Bài viết", path: "/articles", pro: false },
       { name: "Người dùng", path: "/users", pro: false },
+      { name: "Basic Tables", path: "/basic-tables", pro: false }
     ],
   },
   {
