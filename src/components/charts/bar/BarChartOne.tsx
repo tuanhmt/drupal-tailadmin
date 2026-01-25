@@ -13,7 +13,7 @@ export default function BarChartOne() {
   const options: ApexOptions = {
     colors: ["#465fff"],
     chart: {
-      fontFamily: "Outfit, sans-serif",
+      fontFamily: "Play, sans-serif",
       type: "bar",
       height: 180,
       toolbar: {
