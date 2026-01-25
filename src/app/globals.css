@@ -5,7 +5,7 @@
 @theme {
   --font-*: initial;
   /* --font-outfit: Questrial, sans-serif; */
-  --font-inter: Inter, sans-serif;
+  --font-play: Play, sans-serif;
 
   --breakpoint-*: initial;
   --breakpoint-2xsm: 375px;
@@ -189,7 +189,7 @@
     cursor: pointer;
   }
   body {
-    @apply relative font-normal font-inter z-1 bg-gray-50;
+    @apply relative font-normal font-play z-1 bg-gray-50;
   }
 }
 

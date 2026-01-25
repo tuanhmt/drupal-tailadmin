@@ -1,12 +1,12 @@
-import { Inter } from 'next/font/google';
+import { Play } from 'next/font/google';
 import './globals.css';
 
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 
-const inter = Inter({
+const play = Play({
   subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600", "700", "800"]
+  weight: ["400", "700"]
 });
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} dark:bg-gray-900`} suppressHydrationWarning>
+      <body className={`${play.className} dark:bg-gray-900`} suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
             __html: `
