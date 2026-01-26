@@ -19,7 +19,7 @@ export default function StatisticsChart() {
     },
     colors: ["#465FFF", "#9CB9FF"], // Define line colors
     chart: {
-      fontFamily: "Play, sans-serif",
+      fontFamily: "Tektur, sans-serif",
       height: 310,
       type: "line", // Set the chart type to 'line'
       toolbar: {
