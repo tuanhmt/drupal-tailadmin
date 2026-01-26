@@ -197,13 +197,13 @@ export default function EntityListPage({
       <PageBreadcrumb pageTitle={`${getEntityLabel(entityType)}`} />
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/3">
         {/* Header */}
-        <div className="flex flex-col justify-between gap-5 border-b border-gray-200 px-5 py-4 sm:flex-row sm:items-center dark:border-gray-800">
+        <div className="flex flex-col justify-between gap-5 border-b border-gray-200 px-6 py-4 sm:flex-row sm:items-center dark:border-gray-800">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">{getEntityLabel(entityType)}</h3>
             <p className="text-sm text-gray-500 dark:text-gray-400">List of all {getEntityLabel(entityType)}</p>
           </div>
           <div className="flex gap-3">
-            <button className="inline-flex items-center justify-center font-medium gap-2 rounded-lg transition  px-5 py-3.5 text-sm bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/3 dark:hover:text-gray-300 ">
+            <button className="inline-flex items-center justify-center font-medium gap-2 rounded-lg transition  px-6 py-3.5 text-sm bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/3 dark:hover:text-gray-300 ">
               Export<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16.667 13.3333V15.4166C16.667 16.1069 16.1074 16.6666 15.417 16.6666H4.58295C3.89259 16.6666 3.33295 16.1069 3.33295 15.4166V13.3333M10.0013 13.3333L10.0013 3.33325M6.14547 9.47942L9.99951 13.331L13.8538 9.47942" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path></svg>
             </button>
             <a className="bg-brand-500 shadow-sm hover inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition hover:bg-brand-600" href={`/${entityType}/create`}>
@@ -216,7 +216,7 @@ export default function EntityListPage({
         </div>
         {/* End Header */}
 
-        <div className="border-b border-gray-200 px-5 py-4 dark:border-gray-800">
+        <div className="px-6 py-4 dark:border-gray-800">
           <div className="flex gap-3 sm:justify-between">
             <div className="relative flex-1 sm:flex-auto">
               <span className="absolute top-1/2 left-4 -translate-y-1/2 text-gray-500 dark:text-gray-400">
@@ -258,23 +258,23 @@ export default function EntityListPage({
           <>
             <div className="overflow-x-auto custom-scrollbar">
               <Table>
-                <TableHeader className="border-b border-gray-100 dark:border-white/5">
-                  <TableRow className="border-b border-gray-200 dark:divide-gray-800 dark:border-gray-800">
+                <TableHeader className="px-6 py-3.5 border-t border-gray-100 border-y bg-gray-50 dark:border-white/[0.05] dark:bg-gray-900">
+                  <TableRow>
                     <TableCell
                       isHeader
-                      className="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
+                      className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
                     >
                       Name
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
+                      className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
                     >
                       Created
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="cursor-pointer px-5 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
+                      className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
                     >
                       Actions
                     </TableCell>
@@ -284,17 +284,17 @@ export default function EntityListPage({
                 <TableBody className="divide-y divide-gray-100 dark:divide-white/5">
                   {entities.map((entity) => (
                     <TableRow key={entity.id} className="transition hover:bg-gray-50 dark:hover:bg-gray-900">
-                      <TableCell className="px-5 py-4 whitespace-nowrap">
+                      <TableCell className="px-6 py-4 whitespace-nowrap">
                         <div>
                           <h3 className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
                             {getPrimaryField(entity)}
                           </h3>
                         </div>
                       </TableCell>
-                      <TableCell className="px-5 py-4 whitespace-nowrap font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                      <TableCell className="px-6 py-4 whitespace-nowrap font-medium text-gray-800 text-theme-sm dark:text-white/90">
                         {getCreatedDate(entity) || "-"}
                       </TableCell>
-                      <TableCell className="px-5 py-4 whitespace-nowrap font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                      <TableCell className="px-6 py-4 whitespace-nowrap font-medium text-gray-800 text-theme-sm dark:text-white/90">
                         <div className="flex items-center gap-3">
                           <Link
                             href={`/${entityType}/${entity.id}/view`}
@@ -328,7 +328,7 @@ export default function EntityListPage({
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center flex-col sm:flex-row justify-between border-t border-gray-200 px-5 py-4 dark:border-gray-800">
+              <div className="flex items-center flex-col sm:flex-row justify-between border-t border-gray-200 px-6 py-4 dark:border-gray-800">
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Showing {startIndex + 1} to {endIndex} of {totalItems} entries
                 </div>
