@@ -203,10 +203,10 @@ export default function EntityListPage({
             <p className="text-sm text-gray-500 dark:text-gray-400">List of all {getEntityLabel(entityType)}</p>
           </div>
           <div className="flex gap-3">
-            <button className="inline-flex items-center justify-center font-medium gap-2 rounded-lg transition  px-6 py-3.5 text-sm bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/3 dark:hover:text-gray-300 ">
+            <button className="inline-flex items-center justify-center font-normal gap-2 rounded-lg transition  px-6 py-3.5 text-sm bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/3 dark:hover:text-gray-300 ">
               Export<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M16.667 13.3333V15.4166C16.667 16.1069 16.1074 16.6666 15.417 16.6666H4.58295C3.89259 16.6666 3.33295 16.1069 3.33295 15.4166V13.3333M10.0013 13.3333L10.0013 3.33325M6.14547 9.47942L9.99951 13.331L13.8538 9.47942" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path></svg>
             </button>
-            <a className="bg-brand-500 shadow-sm hover inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition hover:bg-brand-600" href={`/${entityType}/create`}>
+            <a className="bg-brand-500 shadow-sm hover inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-normal text-white transition hover:bg-brand-600" href={`/${entityType}/create`}>
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M5 10.0002H15.0006M10.0002 5V15.0006" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
               </svg>
@@ -228,7 +228,7 @@ export default function EntityListPage({
               <input placeholder="Search..." className="shadow-sm focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-2.5 pr-4 pl-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-none sm:w-[300px] sm:min-w-[300px] dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" type="text"></input>
               </div>
               <div className="relative">
-                <button className="shadow-theme-xs flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 sm:w-auto sm:min-w-[100px] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400" type="button">
+                <button className="shadow-theme-xs flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-normal text-gray-700 sm:w-auto sm:min-w-[100px] dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                     <path d="M14.6537 5.90414C14.6537 4.48433 13.5027 3.33331 12.0829 3.33331C10.6631 3.33331 9.51206 4.48433 9.51204 5.90415M14.6537 5.90414C14.6537 7.32398 13.5027 8.47498 12.0829 8.47498C10.663 8.47498 9.51204 7.32398 9.51204 5.90415M14.6537 5.90414L17.7087 5.90411M9.51204 5.90415L2.29199 5.90411M5.34694 14.0958C5.34694 12.676 6.49794 11.525 7.91777 11.525C9.33761 11.525 10.4886 12.676 10.4886 14.0958M5.34694 14.0958C5.34694 15.5156 6.49794 16.6666 7.91778 16.6666C9.33761 16.6666 10.4886 15.5156 10.4886 14.0958M5.34694 14.0958L2.29199 14.0958M10.4886 14.0958L17.7087 14.0958" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     </path>
@@ -258,25 +258,65 @@ export default function EntityListPage({
           <>
             <div className="overflow-x-auto custom-scrollbar">
               <Table>
-                <TableHeader className="px-6 py-3.5 border-t border-gray-100 border-y bg-gray-50 dark:border-white/[0.05] dark:bg-gray-900">
+                <TableHeader className="px-6 py-3.5 border-t border-gray-100 border-y bg-gray-50 dark:border-white/5 dark:bg-gray-900">
                   <TableRow>
                     <TableCell
                       isHeader
-                      className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
+                      className="px-6 whitespace-nowrap3"
                     >
-                      Name
+                      <div className="flex cursor-pointer items-center gap-3">
+                        <p className="text-theme-sm font-medium text-gray-500 dark:text-gray-400">
+                          Title
+                        </p>
+                        <span className="flex flex-col gap-0.5">
+                          <svg className='text-gray-800 dark:text-gray-400' width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z" fill="currentColor"></path>
+                          </svg>
+
+                          <svg className='text-gray-800 dark:text-gray-400' width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z" fill="currentColor"></path>
+                          </svg>
+                        </span>
+                      </div>
+
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
+                      className="px-6 whitespace-nowrap3"
                     >
-                      Created
+                      <div className="flex cursor-pointer items-center gap-3">
+                        <p className="text-theme-sm font-medium text-gray-500 dark:text-gray-400">
+                          Created
+                        </p>
+                        <span className="flex flex-col gap-0.5">
+                          <svg className='text-gray-800 dark:text-gray-400' width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z" fill="currentColor"></path>
+                          </svg>
+
+                          <svg className='text-gray-800 dark:text-gray-400' width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z" fill="currentColor"></path>
+                          </svg>
+                        </span>
+                      </div>
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="cursor-pointer px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400"
+                      className="px-6 py-3 whitespace-nowrap"
                     >
-                      Actions
+                      <div className="flex cursor-pointer items-center gap-3">
+                        <p className="text-theme-sm font-medium text-gray-500 dark:text-gray-400">
+                          Actions
+                        </p>
+                        <span className="flex flex-col gap-0.5">
+                          <svg className='text-gray-800 dark:text-gray-400' width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z" fill="currentColor"></path>
+                          </svg>
+
+                          <svg className='text-gray-800 dark:text-gray-400' width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z" fill="currentColor"></path>
+                          </svg>
+                        </span>
+                      </div>
                     </TableCell>
                   </TableRow>
                 </TableHeader>
@@ -286,15 +326,15 @@ export default function EntityListPage({
                     <TableRow key={entity.id} className="transition hover:bg-gray-50 dark:hover:bg-gray-900">
                       <TableCell className="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <h3 className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                          <h3 className="font-normal text-gray-800 text-theme-sm dark:text-white/90">
                             {getPrimaryField(entity)}
                           </h3>
                         </div>
                       </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                      <TableCell className="px-6 py-4 whitespace-nowrap font-normal text-gray-800 text-theme-sm dark:text-white/90">
                         {getCreatedDate(entity) || "-"}
                       </TableCell>
-                      <TableCell className="px-6 py-4 whitespace-nowrap font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                      <TableCell className="px-6 py-4 whitespace-nowrap font-normal text-gray-800 text-theme-sm dark:text-white/90">
                         <div className="flex items-center gap-3">
                           <Link
                             href={`/${entityType}/${entity.id}/view`}
