@@ -6,9 +6,8 @@ import { usePathname, useSearchParams } from "next/navigation";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 
-// Configure NProgress with showSpinner enabled
 NProgress.configure({
-  showSpinner: true,
+  showSpinner: false,
   minimum: 0.08,
   easing: "ease",
   speed: 500,
