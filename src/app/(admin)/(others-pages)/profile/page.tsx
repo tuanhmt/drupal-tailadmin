@@ -6,6 +6,7 @@ import UserInfoCard from "@/components/user-profile/UserInfoCard";
 import UserMetaCard from "@/components/user-profile/UserMetaCard";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { useRouter } from "next/navigation";
+import { AUTH_PATHS } from "@/lib/auth/constants";
 
 interface User {
   id: string;
@@ -37,7 +38,7 @@ export default function Profile() {
 
         if (!response.ok) {
           if (response.status === 401) {
-            router.push("/signin");
+            router.push(AUTH_PATHS.SIGNIN);
             return;
           }
           throw new Error("Failed to fetch user");

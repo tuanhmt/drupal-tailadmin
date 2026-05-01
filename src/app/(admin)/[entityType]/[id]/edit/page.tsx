@@ -9,6 +9,7 @@ import Input from "@/components/form/input/InputField";
 import TextArea from "@/components/form/input/TextArea";
 import Button from "@/components/ui/button/Button";
 import Link from "next/link";
+import { AUTH_PATHS } from "@/lib/auth/constants";
 
 /**
  * Generic entity edit form page
@@ -58,7 +59,7 @@ export default function EntityEditPage({
 
         if (!response.ok) {
           if (response.status === 401) {
-            router.push("/signin");
+            router.push(AUTH_PATHS.SIGNIN);
             return;
           }
           if (response.status === 404) {

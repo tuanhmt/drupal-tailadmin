@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import Pagination from "@/components/tables/Pagination";
 import { formatDate } from "@/lib/utils";
+import { AUTH_PATHS } from "@/lib/auth/constants";
 import Link from "next/link";
 import Button from "@/components/ui/button/Button";
 import EyeIcon from "@/icons/eye.svg";
@@ -92,7 +93,7 @@ export default function EntityListPage({
 
       if (!response.ok) {
         if (response.status === 401) {
-          router.push("/signin");
+          router.push(AUTH_PATHS.SIGNIN);
           return;
         }
         throw new Error("Failed to fetch entities");

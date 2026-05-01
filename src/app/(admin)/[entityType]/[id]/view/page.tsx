@@ -6,6 +6,7 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 import Button from "@/components/ui/button/Button";
+import { AUTH_PATHS } from "@/lib/auth/constants";
 
 /**
  * Generic entity view page
@@ -52,7 +53,7 @@ export default function EntityViewPage({
 
         if (!response.ok) {
           if (response.status === 401) {
-            router.push("/signin");
+            router.push(AUTH_PATHS.SIGNIN);
             return;
           }
           if (response.status === 404) {

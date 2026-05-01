@@ -15,6 +15,7 @@ import { formatDate, absoluteUrl } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { NextResponse } from "next/server";
+import { AUTH_PATHS } from "@/lib/auth/constants";
 
 interface ArticlesResponse {
   data: DrupalNode[];
@@ -49,7 +50,7 @@ export default function BlogTablePage() {
         // Handle authentication errors
         if (response.status === 401) {
           // Redirect to login if not authenticated
-          return NextResponse.redirect("/signin");
+          return NextResponse.redirect(AUTH_PATHS.SIGNIN);
         }
         throw new Error("Failed to fetch articles");
       }

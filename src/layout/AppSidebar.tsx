@@ -94,8 +94,8 @@ const othersItems: NavItem[] = [
   //   icon: <PlugInIcon />,
   //   name: "Authentication",
   //   subItems: [
-  //     { name: "Sign In", path: "/signin", pro: false },
-  //     { name: "Sign Up", path: "/signup", pro: false },
+  //     { name: "Sign In", path: AUTH_PATHS.SIGNIN, pro: false },
+  //     { name: "Sign Up", path: AUTH_PATHS.SIGNUP, pro: false },
   //   ],
   // },
 ];

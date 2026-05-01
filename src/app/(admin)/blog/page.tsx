@@ -6,6 +6,7 @@ import { ArticleTeaser } from "@/components/drupal/ArticleTeaser"
 import { useState, useEffect } from "react";
 import { NextResponse } from "next/server";
 import Pagination from "@/components/tables/Pagination";
+import { AUTH_PATHS } from "@/lib/auth/constants";
 
 interface ArticlesResponse {
   data: DrupalNode[];
@@ -41,7 +42,7 @@ export default function BlogPage() {
         // Handle authentication errors
         if (response.status === 401) {
           // Redirect to login if not authenticated
-          return NextResponse.redirect("/signin");
+          return NextResponse.redirect(AUTH_PATHS.SIGNIN);
         }
         throw new Error("Failed to fetch articles");
       }
