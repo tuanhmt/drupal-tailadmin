@@ -17,3 +17,12 @@ export const AUTH_COOKIE_OPTIONS = {
     SAME_SITE: 'lax',
     SECURE: true,
 } as const;
+
+/**
+ * Public auth route paths.
+ */
+export const AUTH_PATHS = {
+    SIGNIN: '/signin',
+    SIGNUP: '/signup',
+    RESET_PASSWORD: '/reset-password',
+} as const;

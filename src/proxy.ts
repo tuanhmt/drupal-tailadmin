@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { AUTH_COOKIES, AUTH_PATHS } from "@/lib/auth/constants";
 
 /**
  * Next.js 16 Proxy
@@ -22,7 +23,11 @@ export default function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Allow access to auth routes without authentication
-  const authRoutes = ["/signin", "/signup", "/reset-password"];
+  const authRoutes = [
+    AUTH_PATHS.SIGNIN,
+    AUTH_PATHS.SIGNUP,
+    AUTH_PATHS.RESET_PASSWORD,
+  ];
   const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
   if (isAuthRoute) {
@@ -31,11 +36,11 @@ export default function proxy(request: NextRequest) {
 
   // Check for access_token cookie
   // In Node.js Runtime, we have full access to cookies
-  const accessToken = request.cookies.get("access_token")?.value;
+  const accessToken = request.cookies.get(AUTH_COOKIES.ACCESS_TOKEN)?.value;
 
   if (!accessToken) {
     // Redirect to signin page if no token
-    const signInUrl = new URL("/signin", request.url);
+    const signInUrl = new URL(AUTH_PATHS.SIGNIN, request.url);
     // Preserve the original URL for redirect after login
     signInUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(signInUrl);
