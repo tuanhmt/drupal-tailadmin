@@ -3,9 +3,16 @@ import Checkbox from "@/components/form/input/Checkbox";
 import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
 import { AUTH_PATHS } from "@/lib/auth/constants";
+import { useState, FormEvent } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+const ERROR_MESSAGES: Record<string, string> = {
+  CredentialsSignin: "Invalid username or password.",
+  SessionExpired:    "Your session expired. Please sign in again.",
+  default:           "Something went wrong. Please try again.",
+};
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +23,31 @@ export default function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    const result = await signIn("credentials", {
+      username,
+      password,
+      redirect: false,          // handle redirect ourselves
+    });
+
+    setIsLoading(false);
+
+    if (result?.error) {
+      setError(ERROR_MESSAGES[result.error] ?? ERROR_MESSAGES.default);
+      return;
+    }
+
+    // Success – redirect to the page they were trying to reach (or /articles)
+    const callbackUrl = searchParams.get("redirect") ?? "/";
+    router.push(callbackUrl);
+    router.refresh();           // flush server component cache
+  }
+
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
@@ -38,7 +70,7 @@ export default function SignInForm() {
             </p>
           </div>
           <div>
-            {/* <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
               <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
                 <svg
                   width="20"
@@ -79,8 +111,8 @@ export default function SignInForm() {
                 </svg>
                 Sign in with X
               </button>
-            </div> */}
-            {/* <div className="relative py-3 sm:py-5">
+            </div>
+            <div className="relative py-3 sm:py-5">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
               </div>
@@ -89,40 +121,8 @@ export default function SignInForm() {
                   Or
                 </span>
               </div>
-            </div> */}
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                setError("");
-                setIsLoading(true);
-
-                try {
-                  const response = await fetch("/api/login", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ username, password }),
-                  });
-
-                  const data = await response.json();
-
-                  if (!response.ok) {
-                    setError(data.error || "Login failed");
-                    setIsLoading(false);
-                    return;
-                  }
-
-                  // Login successful - redirect to dashboard or original URL
-                  const redirectUrl = searchParams.get("redirect") || "/";
-                  router.push(redirectUrl);
-                  router.refresh(); // Refresh to update middleware/auth state
-                } catch (err) {
-                  setError("An error occurred. Please try again.");
-                  setIsLoading(false);
-                }
-              }}
-            >
+            </div>
+            <form onSubmit={handleSubmit}>
               <div className="space-y-6">
                 {error && (
                   <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg dark:bg-red-900/20 dark:text-red-400 dark:border-red-800">

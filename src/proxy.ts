@@ -1,55 +1,54 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { AUTH_COOKIES, AUTH_PATHS } from "@/lib/auth/constants";
+import { AUTH_PATHS } from "@/lib/auth/constants";
+import { withAuth, NextRequestWithAuth } from "next-auth/middleware";
 
-/**
- * Next.js 16 Proxy
- *
- * IMPORTANT: Proxy runs on Node.js Runtime - full API access
- * - Can use Node.js APIs
- * - Can call external APIs
- * - Can decode/verify JWT tokens (if needed)
- * - Full access to cookies and headers
- *
- * This proxy:
- * 1. Checks if access_token cookie exists
- * 2. Redirects to /signin if missing (except for auth routes)
- * 3. Allows access to auth routes without token
- *
- * Security note: This is a lightweight check. Actual token validation
- * and scope checking happens in server components via auth-scope.ts
- */
-export default function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+// Auth screens are public; everything else needs a session (see `authorized` below).
+const PUBLIC_PATH_PREFIXES = [
+  AUTH_PATHS.SIGNIN,
+  AUTH_PATHS.SIGNUP,
+  AUTH_PATHS.RESET_PASSWORD,
+] as const;
 
-  // Allow access to auth routes without authentication
-  const authRoutes = [
-    AUTH_PATHS.SIGNIN,
-    AUTH_PATHS.SIGNUP,
-    AUTH_PATHS.RESET_PASSWORD,
-  ];
-  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+export default withAuth(
+  async function middleware(req: NextRequestWithAuth) {
+    const token    = req.nextauth.token as { error?: string } | null;
+    const { pathname } = req.nextUrl;
 
-  if (isAuthRoute) {
+    // ── Detect expired refresh_token ────────────────────────────────────────
+    // The jwt callback sets error:"RefreshAccessTokenError" when Drupal rejects
+    // a refresh attempt. Sign the user out so they can log in again.
+    if (token?.error === "RefreshAccessTokenError") {
+      const loginUrl = req.nextUrl.clone();
+      loginUrl.pathname = AUTH_PATHS.SIGNIN;
+      loginUrl.search = "";
+      loginUrl.searchParams.set("error", "SessionExpired");
+      // After login, send user home — never use /signin as callbackUrl (avoids nesting).
+      loginUrl.searchParams.set("callbackUrl", "/");
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // ── Redirect authenticated users away from /login ───────────────────────
+    if (pathname === AUTH_PATHS.SIGNIN && token) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
     return NextResponse.next();
+  },
+  {
+    callbacks: {
+      // `authorized` controls whether withAuth even calls our middleware fn.
+      // Public routes always pass; other routes need a token → else redirect to signIn
+      // with callbackUrl = attempted URL. Listing /signin as "protected" caused a loop:
+      // /signin → redirect to /signin?callbackUrl=…/signin → nested encoding forever.
+      authorized({ req, token }) {
+        const { pathname } = req.nextUrl;
+        const isPublic = PUBLIC_PATH_PREFIXES.some((p) => pathname.startsWith(p));
+        if (isPublic) return true;
+        return !!token;
+      },
+    },
   }
-
-  // Check for access_token cookie
-  // In Node.js Runtime, we have full access to cookies
-  const accessToken = request.cookies.get(AUTH_COOKIES.ACCESS_TOKEN)?.value;
-
-  if (!accessToken) {
-    // Redirect to signin page if no token
-    const signInUrl = new URL(AUTH_PATHS.SIGNIN, request.url);
-    // Preserve the original URL for redirect after login
-    signInUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(signInUrl);
-  }
-
-  // Token exists, allow request to proceed
-  // Actual token validation happens in server components
-  return NextResponse.next();
-}
+);
 
 // Configure which routes this proxy runs on
 export const config = {
