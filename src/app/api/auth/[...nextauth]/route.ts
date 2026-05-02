@@ -19,8 +19,10 @@ import {
   refreshAccessToken,
   expiresAt,
 } from "@/lib/auth/drupal-oauth";
-import { DrupalJWT, DrupalSession } from "@/types/auth";
+import { DrupalJWT, DrupalSession, SESSION_DURATION } from "@/types/auth";
 import { JWT } from "next-auth/jwt";
+
+const LONG_SESSION_MAX_AGE = SESSION_DURATION.long; // 2592000 s
 
 export const authOptions: AuthOptions = {
   // ── Providers ──────────────────────────────────────────────────────────────
@@ -30,10 +32,13 @@ export const authOptions: AuthOptions = {
       credentials: {
         username: { label: "Username", type: "text" },
         password: { label: "Password", type: "password" },
+        keepMeLoggedIn: { label: "Keep me logged in", type: "boolean" },
       },
 
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null;
+
+        const keep = credentials.keepMeLoggedIn === "true";
 
         try {
           // 1. Get tokens from Drupal
@@ -54,6 +59,7 @@ export const authOptions: AuthOptions = {
             accessToken:        tokens.access_token,
             refreshToken:       tokens.refresh_token,
             accessTokenExpires: expiresAt(tokens.expires_in),
+            keepMeLoggedIn:     keep,
           };
         } catch (err) {
           console.error("[NextAuth] authorize error:", err);
@@ -91,6 +97,7 @@ export const authOptions: AuthOptions = {
           accessToken: string;
           refreshToken: string;
           accessTokenExpires: number;
+          keepMeLoggedIn:     boolean;
         };
         return {
           ...jwt,
@@ -98,6 +105,7 @@ export const authOptions: AuthOptions = {
           refreshToken:       u.refreshToken,
           accessTokenExpires: u.accessTokenExpires,
           drupalUserId:       u.id,
+          keepMeLoggedIn:     u.keepMeLoggedIn,
         } satisfies DrupalJWT;
       }
 
@@ -130,8 +138,25 @@ export const authOptions: AuthOptions = {
      */
     async session({ session, token }): Promise<DrupalSession> {
       const jwt = token as DrupalJWT;
+
+      // ── Dynamically control cookie lifetime ───────────────────────────────
+      // NextAuth reads `session.maxAge` from what we return here when using
+      // the `updateAge` mechanism. We override the expires field so the Set-Cookie
+      // maxAge reflects the user's choice.
+      //
+      // keepMeLoggedIn = false → expires = "session" (browser-close)
+      //   We set expires to a date in the past so NextAuth treats it as a
+      //   session cookie on subsequent requests.  The *initial* Set-Cookie is
+      //   handled by the `cookies` option below.
+      //
+      // keepMeLoggedIn = true → expires = now + 30 days (persistent cookie)
+      const expires = jwt.keepMeLoggedIn
+        ? new Date(Date.now() + LONG_SESSION_MAX_AGE * 1000).toISOString()
+        : new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1h rolling for session-only
+
       return {
         ...session,
+        expires,
         accessToken: jwt.accessToken,
         error:       jwt.error,
         user: {

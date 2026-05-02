@@ -45,3 +45,11 @@ export interface DrupalSession extends DefaultSession {
     roles?: string[];
   };
 }
+
+// Session durations ─────────────────────────────────────────────────────────
+export const SESSION_DURATION = {
+  /** Short: NextAuth cookie expires when browser closes */
+  short:  undefined,          // NextAuth default = session cookie
+  /** Long: 30 days (in seconds, used for maxAge) */
+  long:   60 * 60 * 24 * 30,
+} as const;

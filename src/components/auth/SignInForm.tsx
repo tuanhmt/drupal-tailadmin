@@ -16,7 +16,7 @@ const ERROR_MESSAGES: Record<string, string> = {
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [keepMeLoggedIn, setKeepMeLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -33,6 +33,7 @@ export default function SignInForm() {
       username,
       password,
       redirect: false,          // handle redirect ourselves
+      keepMeLoggedIn: keepMeLoggedIn,
     });
 
     setIsLoading(false);
@@ -171,7 +172,7 @@ export default function SignInForm() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Checkbox checked={isChecked} onChange={setIsChecked} />
+                    <Checkbox checked={keepMeLoggedIn} onChange={() => setKeepMeLoggedIn(!keepMeLoggedIn)} />
                     <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
                       Keep me logged in
                     </span>
