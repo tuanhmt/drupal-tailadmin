@@ -3,6 +3,10 @@ import { getAccessToken } from "@/lib/auth/token";
 import { refreshAccessToken } from "@/lib/auth/refresh-token";
 import { drupal } from "@/lib/drupal/client";
 import { AccessToken } from "next-drupal";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { DrupalSession } from "@/types/auth";
+
 import {
   buildJsonApiParams,
   parseSearchParams,
@@ -35,10 +39,11 @@ export async function GET(
 
     // If ID is provided, fetch a single entity
     if (id) {
-      const accessTokenObject = createAccessTokenObject(accessToken);
+      const session = await getServerSession(authOptions) as DrupalSession;
+      const accessToken = session.accessToken;
 
       const entity = await drupal.getResource<any>(entityType, id, {
-        withAuth: accessTokenObject,
+        withAuth: accessToken,
       });
 
       return NextResponse.json({ data: entity });

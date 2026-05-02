@@ -1,25 +1,26 @@
 "use client";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { AUTH_PATHS } from "@/lib/auth/constants";
-import { signOut } from "next-auth/react";
 import SignOutButton from "../auth/SignOutButton";
+import { useSession } from "next-auth/react";
+import { DrupalSession } from "@/types/auth";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  const { data } = useSession();
+  const session = (data as DrupalSession | null) ?? null;
 
-function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-  e.stopPropagation();
-  setIsOpen((prev) => !prev);
-}
+  function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  }
 
   function closeDropdown() {
     setIsOpen(false);
   }
+
   return (
     <div className="relative">
       <button
@@ -35,12 +36,11 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
           />
         </span>
 
-        <span className="block mr-1 font-medium text-theme-sm">Musharof</span>
+        <span className="block mr-1 font-medium text-theme-sm">{session?.user?.name}</span>
 
         <svg
-          className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""
+            }`}
           width="18"
           height="20"
           viewBox="0 0 18 20"
@@ -64,10 +64,10 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            Musharof Chowdhury
+            {session?.user?.name}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            randomuser@pimjo.com
+            {session?.user?.email}
           </span>
         </div>
 
@@ -94,7 +94,7 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
                   fill=""
                 />
               </svg>
-              Edit profile
+              User profile
             </DropdownItem>
           </li>
           <li>

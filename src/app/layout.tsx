@@ -1,8 +1,6 @@
 import { Tektur } from 'next/font/google';
 import './globals.css';
-
-import { SidebarProvider } from '@/context/SidebarContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+import Providers from "./providers";
 
 const tektur = Tektur({
   subsets: ["latin"],
@@ -31,9 +29,7 @@ export default function RootLayout({
             `,
           }}
         />
-        <ThemeProvider>
-          <SidebarProvider>{children}</SidebarProvider>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
