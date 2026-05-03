@@ -71,7 +71,6 @@ export default function BlogTablePage() {
 
   useEffect(() => {
     fetchArticles(currentPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const handlePageChange = (page: number) => {

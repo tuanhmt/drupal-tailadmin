@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState,useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/components/common/Logo";
@@ -96,9 +96,102 @@ const othersItems: NavItem[] = [
   },
 ];
 
+function submenuForPathname(pathname: string): {
+  type: "main" | "others";
+  index: number;
+} | null {
+  for (const menuType of ["main", "others"] as const) {
+    const items = menuType === "main" ? navItems : othersItems;
+    for (let index = 0; index < items.length; index++) {
+      if (items[index].subItems?.some((s) => s.path === pathname)) {
+        return { type: menuType, index };
+      }
+    }
+  }
+  return null;
+}
+
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
+
+  const isActive = useCallback((path: string) => path === pathname, [pathname]);
+
+  const pathMatchedSubmenu = submenuForPathname(pathname);
+
+  const [manualSubmenu, setManualSubmenu] = useState<{
+    type: "main" | "others";
+    index: number;
+  } | null>(null);
+
+  /** User hid the submenu that matches this URL; cleared automatically when `pathname` changes. */
+  const [routeCollapsed, setRouteCollapsed] = useState<{
+    pathname: string;
+    sig: string;
+  } | null>(null);
+
+  const activeMatchSig = pathMatchedSubmenu
+    ? `${pathMatchedSubmenu.type}-${pathMatchedSubmenu.index}`
+    : null;
+
+  const submenuSuppressed =
+    !!pathMatchedSubmenu &&
+    !!routeCollapsed &&
+    routeCollapsed.pathname === pathname &&
+    routeCollapsed.sig === activeMatchSig;
+
+  const openSubmenu = pathMatchedSubmenu && !submenuSuppressed
+    ? pathMatchedSubmenu
+    : manualSubmenu;
+
+  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
+    {}
+  );
+  const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  useEffect(() => {
+    if (openSubmenu !== null) {
+      const key = `${openSubmenu.type}-${openSubmenu.index}`;
+      const el = subMenuRefs.current[key];
+      if (el) {
+        setSubMenuHeight((prev) => ({
+          ...prev,
+          [key]: el.scrollHeight || 0,
+        }));
+      }
+    }
+  }, [openSubmenu]);
+
+  const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
+    const clicked = { type: menuType, index };
+
+    const visible =
+      pathMatchedSubmenu && !submenuSuppressed
+        ? pathMatchedSubmenu
+        : manualSubmenu;
+
+    if (
+      visible &&
+      visible.type === menuType &&
+      visible.index === index
+    ) {
+      if (
+        pathMatchedSubmenu &&
+        pathMatchedSubmenu.type === menuType &&
+        pathMatchedSubmenu.index === index &&
+        activeMatchSig
+      ) {
+        setRouteCollapsed({ pathname, sig: activeMatchSig });
+        setManualSubmenu(null);
+      } else {
+        setManualSubmenu(null);
+      }
+      return;
+    }
+
+    setRouteCollapsed(null);
+    setManualSubmenu(clicked);
+  };
 
   const renderMenuItems = (
     navItems: NavItem[],
@@ -225,70 +318,6 @@ const AppSidebar: React.FC = () => {
       ))}
     </ul>
   );
-
-  const [openSubmenu, setOpenSubmenu] = useState<{
-    type: "main" | "others";
-    index: number;
-  } | null>(null);
-  const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
-  );
-  const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
-  // const isActive = (path: string) => path === pathname;
-   const isActive = useCallback((path: string) => path === pathname, [pathname]);
-
-  useEffect(() => {
-    // Check if the current path matches any submenu item
-    let submenuMatched = false;
-    ["main", "others"].forEach((menuType) => {
-      const items = menuType === "main" ? navItems : othersItems;
-      items.forEach((nav, index) => {
-        if (nav.subItems) {
-          nav.subItems.forEach((subItem) => {
-            if (isActive(subItem.path)) {
-              setOpenSubmenu({
-                type: menuType as "main" | "others",
-                index,
-              });
-              submenuMatched = true;
-            }
-          });
-        }
-      });
-    });
-
-    // If no submenu item matches, close the open submenu
-    if (!submenuMatched) {
-      setOpenSubmenu(null);
-    }
-  }, [pathname,isActive]);
-
-  useEffect(() => {
-    // Set the height of the submenu items when the submenu is opened
-    if (openSubmenu !== null) {
-      const key = `${openSubmenu.type}-${openSubmenu.index}`;
-      if (subMenuRefs.current[key]) {
-        setSubMenuHeight((prevHeights) => ({
-          ...prevHeights,
-          [key]: subMenuRefs.current[key]?.scrollHeight || 0,
-        }));
-      }
-    }
-  }, [openSubmenu]);
-
-  const handleSubmenuToggle = (index: number, menuType: "main" | "others") => {
-    setOpenSubmenu((prevOpenSubmenu) => {
-      if (
-        prevOpenSubmenu &&
-        prevOpenSubmenu.type === menuType &&
-        prevOpenSubmenu.index === index
-      ) {
-        return null;
-      }
-      return { type: menuType, index };
-    });
-  };
 
   return (
     <aside

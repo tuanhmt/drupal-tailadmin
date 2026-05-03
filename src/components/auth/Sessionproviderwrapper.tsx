@@ -1,5 +1,7 @@
 "use client";
 
+// Wraps the app with NextAuth session + layout providers.
+
 import { SessionProvider } from "next-auth/react";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { ThemeProvider } from "@/context/ThemeContext";
