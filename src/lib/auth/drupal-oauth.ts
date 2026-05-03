@@ -1,7 +1,7 @@
 // src/lib/drupal-oauth.ts
 //
-// Low-level helpers for talking to Drupal's simple_oauth endpoints.
-// These are used by [...nextauth]/route.ts and should never run client-side.
+// Low-level helpers for Drupal simple_oauth endpoints.
+// Server-only — never imported by client components.
 
 import { DrupalTokenResponse, DrupalUserInfo } from "@/types/auth";
 
@@ -45,6 +45,23 @@ export async function fetchTokenWithPassword(
 }
 
 /**
+ * Attempt to refresh the access token.
+ *
+ * Throws `RefreshTokenExpiredError` (a typed subclass) when Drupal returns
+ * 400 invalid_grant — that means the refresh token itself has expired or been
+ * revoked. All other failures throw a generic Error.
+ *
+ * The jwt() callback catches `RefreshTokenExpiredError` specifically so it
+ * can immediately mark the JWT as dead without ambiguity.
+ */
+export class RefreshTokenExpiredError extends Error {
+  constructor(detail: string) {
+    super(`refresh_token expired or revoked: ${detail}`);
+    this.name = "RefreshTokenExpiredError";
+  }
+}
+
+/**
  * Exchange an expired access_token for a new pair using the refresh_token.
  * Throws when the refresh_token itself is expired – caller should sign out.
  */
@@ -59,8 +76,20 @@ export async function refreshAccessToken(
   });
 
   if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Drupal token refresh failed: ${res.status} – ${err}`);
+    const body = await res.text();
+
+    // 400 invalid_grant = refresh token is dead (expired / revoked by Drupal)
+    // Distinguish this from transient errors (500, network timeout, etc.)
+    if (res.status === 400) {
+      let parsed: { error?: string } = {};
+      try { parsed = JSON.parse(body); } catch { /* ignore */ }
+      if (parsed.error === "invalid_grant") {
+        throw new RefreshTokenExpiredError(body);
+      }
+    }
+
+    // Transient failure — don't kill the session yet, let the caller retry
+    throw new Error(`Token refresh HTTP ${res.status}: ${body}`);
   }
 
   return res.json() as Promise<DrupalTokenResponse>;
@@ -85,10 +114,7 @@ export async function fetchDrupalUserInfo(
   return res.json() as Promise<DrupalUserInfo>;
 }
 
-/**
- * Calculate the epoch timestamp (ms) when the access_token expires,
- * with a 60-second safety buffer so we refresh slightly before expiry.
- */
+/** Epoch ms when the access token expires, with a 60 s safety buffer. */
 export function expiresAt(expiresInSeconds: number): number {
   return Date.now() + (expiresInSeconds - 60) * 1000;
 }

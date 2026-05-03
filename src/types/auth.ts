@@ -1,6 +1,6 @@
 // src/types/auth.ts
 
-import { DefaultSession, DefaultUser } from "next-auth";
+import { DefaultSession } from "next-auth";
 import { JWT as DefaultJWT } from "next-auth/jwt";
 
 /**
@@ -8,7 +8,7 @@ import { JWT as DefaultJWT } from "next-auth/jwt";
  */
 export interface DrupalTokenResponse {
   token_type: "Bearer";
-  expires_in: number;       // seconds until access_token expires
+  expires_in: number;
   access_token: string;
   refresh_token: string;
 }
@@ -17,7 +17,7 @@ export interface DrupalTokenResponse {
  * Drupal user info from /oauth/userinfo
  */
 export interface DrupalUserInfo {
-  sub: string;              // Drupal user UUID
+  sub: string;
   name: string;
   email: string;
   roles?: string[];
@@ -29,8 +29,11 @@ export interface DrupalUserInfo {
 export interface DrupalJWT extends DefaultJWT {
   accessToken: string;
   refreshToken: string;
-  accessTokenExpires: number;   // epoch ms
+  accessTokenExpires: number;       // epoch ms
   drupalUserId: string;
+  keepMeLoggedIn: boolean;
+  refreshRetries?: number;          // consecutive transient refresh failures
+  tokenDeadAt?: number;             // epoch ms when we gave up — never retry after this
   error?: "RefreshAccessTokenError";
 }
 
@@ -39,6 +42,7 @@ export interface DrupalJWT extends DefaultJWT {
  */
 export interface DrupalSession extends DefaultSession {
   accessToken: string;
+  tokenDeadAt?: number;             // propagated so SessionGuard can act immediately
   error?: "RefreshAccessTokenError";
   user: DefaultSession["user"] & {
     id: string;

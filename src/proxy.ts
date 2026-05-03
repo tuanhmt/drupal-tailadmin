@@ -11,13 +11,20 @@ const PUBLIC_PATH_PREFIXES = [
 
 export default withAuth(
   async function middleware(req: NextRequestWithAuth) {
-    const token    = req.nextauth.token as { error?: string } | null;
+    const token     = req.nextauth.token as {
+      error?:       string;
+      tokenDeadAt?: number;
+    } | null;
     const { pathname } = req.nextUrl;
 
-    // ── Detect expired refresh_token ────────────────────────────────────────
-    // The jwt callback sets error:"RefreshAccessTokenError" when Drupal rejects
-    // a refresh attempt. Sign the user out so they can log in again.
-    if (token?.error === "RefreshAccessTokenError") {
+    // ── A: error flag set by jwt() callback ──────────────────────────────────
+    const hasErrorFlag = token?.error === "RefreshAccessTokenError";
+
+    // ── B: tokenDeadAt timestamp (belt-and-suspenders) ───────────────────────
+    const isTimestampDead =
+      typeof token?.tokenDeadAt === "number" && Date.now() >= token.tokenDeadAt;
+
+    if (hasErrorFlag || isTimestampDead) {
       const loginUrl = req.nextUrl.clone();
       loginUrl.pathname = AUTH_PATHS.SIGNIN;
       loginUrl.search = "";
