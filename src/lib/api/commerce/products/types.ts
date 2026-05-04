@@ -1,5 +1,5 @@
 /**
- * Project API types for the default product bundle (`commerce_product--default`).
+ * Products API types for the default product bundle (`commerce_product--default`).
  *
  * T-prefixed aliases are the stable surface for app code. Base interfaces live here;
  * if you later generate types from OpenAPI, map them to these `T*` names in this file.
@@ -8,9 +8,7 @@
  * - Actions/queries use these types exclusively
  */
 
-export interface JsonApiLinks {
-  [key: string]: string | Record<string, string> | undefined;
-}
+import type { JsonApiLinks } from "next-drupal";
 
 /** JSON:API `type` + `id` pair. */
 export interface ResourceIdentifierObject {
