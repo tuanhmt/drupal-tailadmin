@@ -5,13 +5,13 @@ import { JsonApiRequestError } from "@/lib/jsonapi/client";
 import { DeleteProductButton } from "./DeleteProductButton";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export const dynamic = "force-dynamic";
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   let product;
   try {
