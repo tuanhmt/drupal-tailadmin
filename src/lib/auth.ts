@@ -14,6 +14,12 @@ type OAuthTokenResponse = {
   token_type?: string;
 };
 
+type DrupalUserInfo = {
+  sub: string;
+  name: string;
+  email: string;
+};
+
 const DRUPAL_BASE_URL = process.env.NEXT_PUBLIC_DRUPAL_BASE_URL ?? "";
 const LOGIN_ENDPOINT = process.env.DRUPAL_LOGIN_ENDPOINT ?? "/oauth/token";
 const CLIENT_ID = process.env.DRUPAL_CLIENT_ID ?? "";
@@ -106,6 +112,25 @@ async function refreshDrupalToken(
   return (await res.json()) as OAuthTokenResponse;
 }
 
+/**
+ * Fetch Drupal user info using a valid access_token.
+ * simple_oauth exposes /oauth/userinfo when OpenID Connect is enabled.
+ */
+export async function getUserInfo(
+  accessToken: string
+): Promise<DrupalUserInfo> {
+  const res = await fetch(`${DRUPAL_BASE_URL}/oauth/userinfo`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+    cache:   "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Drupal userinfo failed: ${res.status}`);
+  }
+
+  return res.json() as Promise<DrupalUserInfo>;
+}
+
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   // 30 day session by default; tune to taste.
@@ -128,10 +153,16 @@ export const authOptions: NextAuthOptions = {
             credentials.password,
           );
 
+          const user = await getUserInfo(token.access_token);
+          if (!user) {
+            throw new Error("User not found");
+          }
+
           const expiresIn = token.expires_in ?? 3600;
           return {
-            id: credentials.username,
-            name: credentials.username,
+            id: user.sub,
+            name: user.name,
+            email: user.email,
             username: credentials.username,
             accessToken: token.access_token,
             refreshToken: token.refresh_token,
@@ -154,6 +185,7 @@ export const authOptions: NextAuthOptions = {
         token.refreshToken = user.refreshToken;
         token.accessTokenExpires = user.accessTokenExpires;
         token.username = user.username;
+        token.email = user.email;
         return token;
       }
 
@@ -196,8 +228,6 @@ export const authOptions: NextAuthOptions = {
       session.user = {
         ...session.user,
         id: token.sub,
-        username: token.username,
-        name: token.username ?? session.user?.name ?? null,
       };
       return session;
     },

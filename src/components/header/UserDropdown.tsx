@@ -5,12 +5,12 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import SignOutButton from "../auth/SignOutButton";
 import { useSession } from "next-auth/react";
-import { DrupalSession } from "@/types/auth";
+import { Session } from "next-auth";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { data } = useSession();
-  const session = (data as DrupalSession | null) ?? null;
+  const session = data as Session | null;
 
   function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.stopPropagation();

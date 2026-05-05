@@ -17,8 +17,12 @@ export default withAuth(
     const { pathname } = req.nextUrl;
 
     const hasErrorFlag = token?.error === "RefreshAccessTokenError";
+    const isSignInPage = pathname.startsWith(PUBLIC_PATHS.SIGNIN);
 
     if (!token || hasErrorFlag) {
+      if (isSignInPage) {
+        return NextResponse.next();
+      }
       const loginUrl = req.nextUrl.clone();
       loginUrl.pathname = PUBLIC_PATHS.SIGNIN;
       loginUrl.search = "";
@@ -27,7 +31,7 @@ export default withAuth(
       return NextResponse.redirect(loginUrl);
     }
 
-    if (pathname === PUBLIC_PATHS.SIGNIN && token) {
+    if (isSignInPage && token) {
       return NextResponse.redirect(new URL("/", req.url));
     }
 

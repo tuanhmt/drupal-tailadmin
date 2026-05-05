@@ -23,6 +23,8 @@ declare module "next-auth" {
     error?: "RefreshAccessTokenError" | "MissingRefreshToken";
     user: DefaultSession["user"] & {
       id?: string;
+      name?: string;
+      email?: string;
       username?: string;
     };
   }

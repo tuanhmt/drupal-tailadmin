@@ -28,15 +28,6 @@ export default function SignOutButton({
 
   async function handleSignOut() {
     setLoading(true);
-
-    // Phase 1 – revoke the token on Drupal (RFC 7009)
-    try {
-      await fetch("/api/auth/revoke", { method: "POST" });
-    } catch {
-      // Non-fatal – proceed to clear local session anyway
-      console.warn("[SignOutButton] Token revocation request failed");
-    }
-
     // Phase 2 – clear NextAuth cookie and redirect
     await signOut({ callbackUrl });
   }
