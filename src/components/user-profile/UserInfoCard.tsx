@@ -5,7 +5,7 @@ import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/client-utils";
 
 interface UserInfoCardProps {
   user?: {
