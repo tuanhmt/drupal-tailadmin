@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Pagination from "@/components/tables/Pagination";
-import { formatDate, absoluteUrl } from "@/lib/utils";
+import { formatDate, absoluteUrl } from "@/lib/client-utils";
 import Image from "next/image";
 import Link from "next/link";
 import { NextResponse } from "next/server";
