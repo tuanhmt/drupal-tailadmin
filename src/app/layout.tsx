@@ -1,6 +1,6 @@
 import { Tektur } from 'next/font/google';
 import './globals.css';
-import SessionProviderWrapper from "../components/auth/Sessionproviderwrapper";
+import { Providers } from "./providers";
 
 const tektur = Tektur({
   subsets: ["latin"],
@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${tektur.className} dark:bg-gray-900`} suppressHydrationWarning>
-        <SessionProviderWrapper>{children}</SessionProviderWrapper>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
