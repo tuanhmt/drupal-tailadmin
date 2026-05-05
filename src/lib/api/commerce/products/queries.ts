@@ -4,10 +4,7 @@ import { drupal } from "@/lib/drupal";
 import { getServerToken } from "@/lib/utils";
 
 import { getProductResourceType } from "./config";
-import {
-  ProductApiError,
-  accessTokenStringToDrupalAuth,
-} from "./helpers";
+import { ProductApiError } from "./helpers";
 import type {
   TProduct,
   TProductCollection,
@@ -17,7 +14,7 @@ import type {
 async function authToken() {
   try {
     const accessToken = await getServerToken();
-    return accessTokenStringToDrupalAuth(accessToken);
+    return accessToken;
   } catch (e) {
     if (e instanceof Error) {
       if (e.message === "Unauthenticated") {
@@ -33,7 +30,7 @@ async function authToken() {
 
 const resourceType = () => getProductResourceType();
 
-export async function queryProductList(
+export async function getProducts(
   params?: TJsonApiListParams
 ): Promise<TProductCollection> {
   const token = await authToken();
@@ -44,7 +41,7 @@ export async function queryProductList(
   return list as TProductCollection;
 }
 
-export async function queryProductById(id: string): Promise<TProduct> {
+export async function getProduct(id: string): Promise<TProduct> {
   const token = await authToken();
   const one = await drupal.getResource<JsonApiResource>(
     resourceType(),
@@ -54,7 +51,7 @@ export async function queryProductById(id: string): Promise<TProduct> {
   return one as TProduct;
 }
 
-export async function queryProductCreate(
+export async function createProduct(
   body: JsonApiCreateResourceBody
 ): Promise<TProduct> {
   const token = await authToken();
@@ -66,7 +63,7 @@ export async function queryProductCreate(
   return created as TProduct;
 }
 
-export async function queryProductUpdate(
+export async function updateProduct(
   id: string,
   body: JsonApiUpdateResourceBody
 ): Promise<TProduct> {
@@ -80,7 +77,7 @@ export async function queryProductUpdate(
   return updated as TProduct;
 }
 
-export async function queryProductDelete(id: string): Promise<boolean> {
+export async function deleteProduct(id: string): Promise<boolean> {
   const token = await authToken();
   return drupal.deleteResource(resourceType(), id, { withAuth: token });
 }

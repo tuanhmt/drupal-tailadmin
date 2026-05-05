@@ -35,14 +35,14 @@ function toFailure(e: unknown): ActionResult<never> {
   return { ok: false, error: "Unexpected error", status: 500 };
 }
 
-export async function listProductsAction(
+export async function getProductsAction(
   params?: TJsonApiListParams
 ): Promise<ActionResult<TProductCollection>> {
   try {
     const parsed = productListParamsSchema.parse(
       params === undefined ? undefined : params
     );
-    const data = await productQueries.queryProductList(parsed);
+    const data = await productQueries.getProducts(parsed);
     return { ok: true, data };
   } catch (e) {
     return toFailure(e);
@@ -56,7 +56,7 @@ export async function getProductAction(
     return { ok: false, error: "Product id is required", status: 400 };
   }
   try {
-    const data = await productQueries.queryProductById(id.trim());
+    const data = await productQueries.getProduct(id.trim());
     return { ok: true, data };
   } catch (e) {
     return toFailure(e);
@@ -75,7 +75,7 @@ export async function createProductAction(
         type: parsed.data.type ?? type,
       },
     } as JsonApiCreateResourceBody;
-    const data = await productQueries.queryProductCreate(body);
+    const data = await productQueries.createProduct(body);
     return { ok: true, data };
   } catch (e) {
     return toFailure(e);
@@ -90,7 +90,7 @@ export async function updateProductAction(
     const body: JsonApiUpdateResourceBody = {
       data: parsed.data,
     } as JsonApiUpdateResourceBody;
-    const data = await productQueries.queryProductUpdate(
+    const data = await productQueries.updateProduct(
       parsed.data.id,
       body
     );
@@ -107,7 +107,7 @@ export async function deleteProductAction(
     return { ok: false, error: "Product id is required", status: 400 };
   }
   try {
-    const deleted = await productQueries.queryProductDelete(id.trim());
+    const deleted = await productQueries.deleteProduct(id.trim());
     if (!deleted) {
       return { ok: false, error: "Product not found or not deleted", status: 404 };
     }

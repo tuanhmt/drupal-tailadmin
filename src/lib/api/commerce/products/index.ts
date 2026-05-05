@@ -1,5 +1,5 @@
 export {
-  listProductsAction,
+  getProductsAction,
   getProductAction,
   createProductAction,
   updateProductAction,
@@ -25,11 +25,11 @@ export {
 } from "./validation";
 
 export {
-  queryProductList,
-  queryProductById,
-  queryProductCreate,
-  queryProductUpdate,
-  queryProductDelete,
+  getProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
 } from "./queries";
 
 export { mockProduct } from "./mocks";
