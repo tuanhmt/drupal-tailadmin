@@ -156,7 +156,6 @@ export const authOptions: AuthOptions = {
       return {
         ...session,
         expires,
-        accessToken: jwt.accessToken,
         error:       jwt.error,
         tokenDeadAt: jwt.tokenDeadAt,
         user: {

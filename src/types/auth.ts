@@ -17,7 +17,7 @@ export interface DrupalUserInfo {
   roles?: string[];
 }
 
-/** JWT payload (never expose refresh_token to the browser). */
+/** JWT payload (server-only: never put `accessToken` / `refreshToken` on `session`). */
 export interface DrupalJWT extends DefaultJWT {
   accessToken: string;
   refreshToken: string;
@@ -29,9 +29,8 @@ export interface DrupalJWT extends DefaultJWT {
   error?: "RefreshAccessTokenError";
 }
 
-/** What the browser sees via `useSession` / `getServerSession`. */
+/** What the browser sees via `useSession` / `getServerSession` (no OAuth tokens). */
 export interface DrupalSession extends DefaultSession {
-  accessToken: string;
   tokenDeadAt?: number;
   error?: "RefreshAccessTokenError";
   user: DefaultSession["user"] & {
