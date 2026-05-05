@@ -4,8 +4,8 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-import React, { useState } from "react";
-import { AUTH_PATHS } from "@/lib/auth/constants";
+import { useState } from "react";
+import { PUBLIC_PATHS } from "@/lib/auth/constants";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -177,7 +177,7 @@ export default function SignUpForm() {
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
                 Already have an account? {""}
                 <Link
-                  href={AUTH_PATHS.SIGNIN}
+                  href={PUBLIC_PATHS.SIGNIN}
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
                   Sign In

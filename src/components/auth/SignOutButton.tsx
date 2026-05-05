@@ -10,7 +10,7 @@
 
 import { useState } from "react";
 import { signOut } from "next-auth/react";
-import { AUTH_PATHS } from "@/lib/auth/constants";
+import { PUBLIC_PATHS } from "@/lib/auth/constants";
 
 interface Props {
   /** Where to redirect after sign-out. Defaults to /login */
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default function SignOutButton({
-  callbackUrl = AUTH_PATHS.SIGNIN,
+  callbackUrl = PUBLIC_PATHS.SIGNIN,
   className = "flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300 w-full text-left",
   children = "Sign out",
 }: Props) {

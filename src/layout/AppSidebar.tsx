@@ -17,7 +17,7 @@ import {
   TableIcon,
   CalenderIcon
 } from "../icons/index";
-import { AUTH_PATHS } from "@/lib/auth/constants";
+import { PUBLIC_PATHS } from "@/lib/auth/constants";
 
 
 type NavItem = {
@@ -90,8 +90,8 @@ const othersItems: NavItem[] = [
     icon: <PlugInIcon />,
     name: "Authentication",
     subItems: [
-      { name: "Sign In", path: AUTH_PATHS.SIGNIN, pro: false },
-      { name: "Sign Up", path: AUTH_PATHS.SIGNUP, pro: false },
+      { name: "Sign In", path: PUBLIC_PATHS.SIGNIN, pro: false },
+      { name: "Sign Up", path: PUBLIC_PATHS.SIGNUP, pro: false },
     ],
   },
 ];

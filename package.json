@@ -27,7 +27,6 @@
     "flatpickr": "^4.6.13",
     "next": "16.2.4",
     "next-auth": "^4.24.14",
-    "next-drupal": "^2.0.0",
     "nprogress": "^0.2.0",
     "react": "^19.2.0",
     "react-apexcharts": "^1.8.0",

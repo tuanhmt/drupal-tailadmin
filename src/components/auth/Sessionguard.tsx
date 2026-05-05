@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { DrupalSession } from "@/types/auth";
-import { AUTH_PATHS } from "@/lib/auth/constants";
+import { PUBLIC_PATHS } from "@/lib/auth/constants";
 
 interface Props {
   children: React.ReactNode;
@@ -36,7 +36,7 @@ export default function SessionGuard({ children }: Props) {
         tokenDeadAt: session?.tokenDeadAt,
       });
       signOut({
-        callbackUrl: `${AUTH_PATHS.SIGNIN}?error=SessionExpired`,
+        callbackUrl: `${PUBLIC_PATHS.SIGNIN}?error=SessionExpired`,
       });
     }
   }, [session, status]);

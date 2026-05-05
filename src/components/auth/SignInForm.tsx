@@ -3,7 +3,7 @@ import Checkbox from "@/components/form/input/Checkbox";
 import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-import { AUTH_PATHS } from "@/lib/auth/constants";
+import { PUBLIC_PATHS } from "@/lib/auth/constants";
 import { useState, FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -29,11 +29,10 @@ export default function SignInForm() {
     setIsLoading(true);
     setError("");
 
-    const result = await signIn("credentials", {
+    const result = await signIn("drupal", {
       username,
       password,
-      redirect: false,          // handle redirect ourselves
-      keepMeLoggedIn: keepMeLoggedIn,
+      redirect: false,
     });
 
     setIsLoading(false);
@@ -178,7 +177,7 @@ export default function SignInForm() {
                     </span>
                   </div>
                   <Link
-                    href={AUTH_PATHS.RESET_PASSWORD}
+                    href={PUBLIC_PATHS.RESET_PASSWORD}
                     className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                   >
                     Forgot password?
@@ -200,7 +199,7 @@ export default function SignInForm() {
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
                 Don&apos;t have an account? {""}
                 <Link
-                  href={AUTH_PATHS.SIGNUP}
+                  href={PUBLIC_PATHS.SIGNUP}
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
                   Sign Up
