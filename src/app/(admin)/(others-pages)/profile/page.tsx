@@ -6,7 +6,7 @@ import UserInfoCard from "@/components/user-profile/UserInfoCard";
 import UserMetaCard from "@/components/user-profile/UserMetaCard";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { useRouter } from "next/navigation";
-import { AUTH_PATHS } from "@/lib/auth/constants";
+import { PUBLIC_PATHS } from "@/lib/auth/constants";
 
 interface User {
   id: string;
@@ -38,7 +38,7 @@ export default function Profile() {
 
         if (!response.ok) {
           if (response.status === 401) {
-            router.push(AUTH_PATHS.SIGNIN);
+            router.push(PUBLIC_PATHS.SIGNIN);
             return;
           }
           throw new Error("Failed to fetch user");
@@ -61,7 +61,7 @@ export default function Profile() {
     return (
       <div>
         <PageBreadcrumb pageTitle="Profile" />
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3 lg:p-6">
           <div className="text-center py-12">
             <p className="text-gray-500 dark:text-gray-400">Loading profile...</p>
           </div>
@@ -74,7 +74,7 @@ export default function Profile() {
     return (
       <div>
         <PageBreadcrumb pageTitle="Profile" />
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3 lg:p-6">
           <div className="text-center py-12">
             <p className="text-red-500 dark:text-red-400">
               {error || "User not found"}
@@ -99,7 +99,7 @@ export default function Profile() {
   return (
     <div>
       <PageBreadcrumb pageTitle="Profile" />
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
+      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/3 lg:p-6">
         <h3 className="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
           Profile
         </h3>
