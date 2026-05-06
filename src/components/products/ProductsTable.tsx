@@ -63,12 +63,6 @@ export default function ProductsTable({
       },
     },
     {
-      key: "id",
-      header: "Product ID",
-      className: "text-gray-500 dark:text-gray-400",
-      render: (product: TProduct) => product.id,
-    },
-    {
       key: "price",
       header: "Price",
       className: "text-gray-700 dark:text-gray-300",

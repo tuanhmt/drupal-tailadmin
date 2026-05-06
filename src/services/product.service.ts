@@ -1,4 +1,5 @@
 import { makeJsonApiCrud } from "@/lib/jsonapi/crud";
+import { jsonApi } from "@/lib/jsonapi/client";
 import type {
   JsonApiResource,
   JsonApiQuery,
@@ -44,6 +45,7 @@ export interface TProductAttributes {
  * (optional) relationships.
  */
 export type TProduct = JsonApiResource<TProductAttributes>;
+export type TStore = JsonApiResource<{ is_default?: boolean; name?: string }>;
 
 /* ------------------------------------------------------------------ */
 /* CRUD                                                                */
@@ -90,6 +92,23 @@ export const productService = {
       },
       opts,
     );
+  },
+
+  /**
+   * Fetch the default store from `/jsonapi/store` (`is_default = true`).
+   */
+  async getDefaultStore(
+    opts?: Parameters<typeof jsonApi.getCollection>[2],
+  ): Promise<TStore | null> {
+    const res = await jsonApi.getCollection<{ is_default?: boolean; name?: string }>(
+      "store",
+      {
+        filter: { is_default: true },
+        page: { limit: 1, offset: 0 },
+      },
+      opts,
+    );
+    return (res.data[0] as TStore | undefined) ?? null;
   },
 };
 

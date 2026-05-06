@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
+import React, { ReactElement, ReactNode, isValidElement } from "react";
 
 interface ButtonProps {
-  children: ReactNode; // Button text or content
+  children: ReactNode; // Button text/content or a child element when asChild=true
   size?: "sm" | "md"; // Button size
   variant?: "primary" | "outline"; // Button variant
   startIcon?: ReactNode; // Icon before the text
@@ -10,6 +10,7 @@ interface ButtonProps {
   disabled?: boolean; // Disabled state
   className?: string; // Disabled state
   type?: "button" | "submit" | "reset"; // Button type
+  asChild?: boolean; // Render styles onto child element (e.g. Link)
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -22,6 +23,7 @@ const Button: React.FC<ButtonProps> = ({
   className = "",
   disabled = false,
   type = "button",
+  asChild = false,
 }) => {
   // Size Classes
   const sizeClasses = {
@@ -37,20 +39,38 @@ const Button: React.FC<ButtonProps> = ({
       "bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300",
   };
 
-  return (
-    <button
-      type={type}
-      className={`inline-flex items-center justify-center font-medium gap-2 rounded-lg transition ${className} ${
-        sizeClasses[size]
-      } ${variantClasses[variant]} ${
-        disabled ? "cursor-not-allowed opacity-50" : ""
-      }`}
-      onClick={onClick}
-      disabled={disabled}
-    >
+  const content = (
+    <>
       {startIcon && <span className="flex items-center">{startIcon}</span>}
       {children}
       {endIcon && <span className="flex items-center">{endIcon}</span>}
+    </>
+  );
+
+  const classes = `inline-flex items-center justify-center font-medium gap-2 rounded-lg transition ${className} ${
+    sizeClasses[size]
+  } ${variantClasses[variant]} ${
+    disabled ? "cursor-not-allowed opacity-50" : ""
+  }`;
+
+  if (asChild) {
+    if (!isValidElement(children)) {
+      return null;
+    }
+    const child = children as ReactElement<{ className?: string }>;
+    return React.cloneElement(child, {
+      className: `${classes} ${child.props.className ?? ""}`.trim(),
+    });
+  }
+
+  return (
+    <button
+      type={type}
+      className={classes}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {content}
     </button>
   );
 };

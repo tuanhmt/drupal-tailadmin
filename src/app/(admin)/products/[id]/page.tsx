@@ -2,6 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { productService } from "@/services/product.service";
 import { JsonApiRequestError } from "@/lib/jsonapi/client";
+import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import ComponentCard from "@/components/common/ComponentCard";
+import Label from "@/components/form/Label";
+import Input from "@/components/form/input/InputField";
 import { DeleteProductButton } from "./DeleteProductButton";
 
 interface PageProps {
@@ -33,78 +37,95 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const status = Boolean(a.status);
   const created = a.created as string | undefined;
   const changed = a.changed as string | undefined;
+  const actionTabClass =
+    "inline-flex w-full items-center justify-center rounded-md px-3 py-2 text-theme-sm font-medium text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white";
+  const backButtonClass =
+    "inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-3 py-2 text-theme-sm font-medium whitespace-nowrap text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-white/5";
 
   return (
-    <div>
-      <div className="page-header">
-        <h1>{title}</h1>
-        <div className="row">
-          <Link href={`/products/${id}/edit`} className="btn">
+    <div className="space-y-6">
+      <PageBreadcrumb pageTitle={title} />
+
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-0.5 rounded-lg bg-gray-100 p-0.5 dark:bg-gray-900">
+          <Link
+            href={`/products/${id}`}
+            className={`${actionTabClass} shadow-theme-xs bg-white text-gray-900 dark:bg-gray-800 dark:text-white`}
+          >
+            View
+          </Link>
+          <Link
+            href={`/products/${id}/edit`}
+            className={actionTabClass}
+          >
             Edit
           </Link>
-          <DeleteProductButton id={id} />
-          <Link href="/products" className="btn secondary">
-            Back
-          </Link>
+          <DeleteProductButton
+            id={id}
+            className={`${actionTabClass} text-error-600 hover:text-error-700 dark:text-error-400 dark:hover:text-error-300`}
+          />
         </div>
+        <Link href="/products" className={backButtonClass}>
+          Back
+        </Link>
       </div>
 
-      <div className="card">
-        <dl className="kv">
-          <dt>ID</dt>
-          <dd>
-            <code>{id}</code>
-          </dd>
-
-          <dt>Type</dt>
-          <dd>
-            <code>{product.type}</code>
-          </dd>
-
-          <dt>Status</dt>
-          <dd>{status ? "Published" : "Unpublished"}</dd>
-
-          {price?.number && (
-            <>
-              <dt>Price</dt>
-              <dd>
-                {price.number} {price.currency_code ?? ""}
-              </dd>
-            </>
-          )}
-
-          {created && (
-            <>
-              <dt>Created</dt>
-              <dd>{new Date(created).toLocaleString()}</dd>
-            </>
-          )}
-
-          {changed && (
-            <>
-              <dt>Updated</dt>
-              <dd>{new Date(changed).toLocaleString()}</dd>
-            </>
-          )}
-        </dl>
-
-        {(body?.processed || body?.value) && (
-          <>
-            <hr
-              style={{
-                border: 0,
-                borderTop: "1px solid var(--border)",
-                margin: "20px 0",
-              }}
+      <ComponentCard title="Product Information">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <div>
+            <Label htmlFor="product-title">Title</Label>
+            <Input id="product-title" disabled defaultValue={title} />
+          </div>
+          <div>
+            <Label htmlFor="product-status">Status</Label>
+            <Input
+              id="product-status"
+              disabled
+              defaultValue={status ? "Published" : "Unpublished"}
             />
-            <div
-              dangerouslySetInnerHTML={{
-                __html: body.processed ?? body.value ?? "",
-              }}
+          </div>
+          <div>
+            <Label htmlFor="product-price">Price</Label>
+            <Input
+              id="product-price"
+              disabled
+              defaultValue={
+                price?.number
+                  ? `${price.number} ${price.currency_code ?? ""}`.trim()
+                  : "-"
+              }
             />
-          </>
-        )}
-      </div>
+          </div>
+          <div>
+            <Label htmlFor="product-created">Created</Label>
+            <Input
+              id="product-created"
+              disabled
+              defaultValue={created ? new Date(created).toLocaleString() : "-"}
+            />
+          </div>
+          <div>
+            <Label htmlFor="product-updated">Updated</Label>
+            <Input
+              id="product-updated"
+              disabled
+              defaultValue={changed ? new Date(changed).toLocaleString() : "-"}
+            />
+          </div>
+        </div>
+
+        <div>
+          <Label htmlFor="product-description">Description</Label>
+          <textarea
+            id="product-description"
+            rows={8}
+            disabled
+            value={body?.value ?? ""}
+            readOnly
+            className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:text-gray-500 disabled:cursor-not-allowed dark:disabled:bg-gray-800 dark:disabled:text-gray-400"
+          />
+        </div>
+      </ComponentCard>
     </div>
   );
 }

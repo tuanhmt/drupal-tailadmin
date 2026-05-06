@@ -12,8 +12,50 @@ import { JsonApiRequestError } from "@/lib/jsonapi/client";
  */
 
 export type TProductActionResult =
-  | { ok: true }
+  | { ok: true; id?: string }
   | { ok: false; error: string };
+
+/**
+ * Create a product from form fields.
+ */
+export async function createProductAction(
+  _prev: TProductActionResult | undefined,
+  formData: FormData,
+): Promise<TProductActionResult> {
+  const title = (formData.get("title") ?? "").toString().trim();
+  const bodyValue = (formData.get("body") ?? "").toString();
+  const statusRaw = formData.get("status");
+
+  if (!title) {
+    return { ok: false, error: "Title is required." };
+  }
+
+  const attributes: Partial<TProductAttributes> = {
+    title,
+    status: statusRaw === "on" || statusRaw === "true" || statusRaw === "1",
+  };
+
+  if (bodyValue.length > 0) {
+    attributes.body = { value: bodyValue, format: "basic_html" };
+  }
+
+  try {
+    const defaultStore = await productService.getDefaultStore();
+    if (!defaultStore) {
+      return { ok: false, error: "Default store is not configured." };
+    }
+
+    const created = await productService.create(attributes, {
+      stores: {
+        data: [{ type: defaultStore.type, id: defaultStore.id }],
+      },
+    });
+    revalidatePath("/products");
+    return { ok: true, id: created.data.id };
+  } catch (err) {
+    return { ok: false, error: formatJsonApiError(err) };
+  }
+}
 
 /**
  * Update a product. Designed to be called from a `<form action={updateProduct}>`

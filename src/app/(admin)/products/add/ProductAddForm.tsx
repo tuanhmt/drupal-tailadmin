@@ -9,37 +9,31 @@ import Input from "@/components/form/input/InputField";
 import Checkbox from "@/components/form/input/Checkbox";
 import Button from "@/components/ui/button/Button";
 import {
-  updateProductAction,
+  createProductAction,
   type TProductActionResult,
-} from "../../actions";
+} from "../actions";
 
-interface InitialValues {
-  id: string;
-  title: string;
-  body: string;
-  status: boolean;
-}
-
-export function ProductEditForm({ initial }: { initial: InitialValues }) {
+export function ProductAddForm() {
   const router = useRouter();
-  const [status, setStatus] = useState(initial.status);
+  const [status, setStatus] = useState(true);
   const [state, formAction] = useActionState<
     TProductActionResult | undefined,
     FormData
-  >(updateProductAction, undefined);
+  >(createProductAction, undefined);
 
-  // Navigate to the detail page on a successful save.
   useEffect(() => {
     if (state?.ok) {
-      router.replace(`/products/${initial.id}`);
+      if (state.id) {
+        router.replace(`/products/${state.id}`);
+      } else {
+        router.replace("/products");
+      }
       router.refresh();
     }
-  }, [state, router, initial.id]);
+  }, [state, router]);
 
   return (
     <form action={formAction} className="space-y-6">
-      <input type="hidden" name="id" value={initial.id} />
-
       {state && !state.ok && (
         <div className="rounded-lg border border-error-200 bg-error-50 px-4 py-3 text-sm text-error-700 dark:border-error-900/40 dark:bg-error-500/10 dark:text-error-400">
           {state.error}
@@ -56,7 +50,6 @@ export function ProductEditForm({ initial }: { initial: InitialValues }) {
           type="text"
           required
           placeholder="Enter product title"
-          defaultValue={initial.title}
         />
       </div>
 
@@ -67,7 +60,6 @@ export function ProductEditForm({ initial }: { initial: InitialValues }) {
           name="body"
           rows={6}
           placeholder="Write product description"
-          defaultValue={initial.body}
           className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
         />
       </div>
@@ -78,20 +70,20 @@ export function ProductEditForm({ initial }: { initial: InitialValues }) {
         <Checkbox id="status" checked={status} onChange={setStatus} label="Published" />
       </div>
 
-      <FormActions id={initial.id} />
+      <FormActions />
     </form>
   );
 }
 
-function FormActions({ id }: { id: string }) {
+function FormActions() {
   const { pending } = useFormStatus();
   return (
     <div className="flex items-center gap-3">
       <Button size="sm" type="submit" disabled={pending}>
-        {pending ? "Saving…" : "Save changes"}
+        {pending ? "Creating..." : "Create product"}
       </Button>
       <Button asChild size="sm" variant="outline">
-        <Link href={`/products/${id}`}>Cancel</Link>
+        <Link href="/products">Cancel</Link>
       </Button>
     </div>
   );
