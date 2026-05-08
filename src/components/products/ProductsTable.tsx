@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import EntityTable from "@/components/tables/EntityTable";
+import Pagination from "@/components/tables/Pagination";
 import type { TProduct } from "@/services/product.service";
 
 type ProductsTableProps = {
@@ -46,6 +50,7 @@ export default function ProductsTable({
   total,
   search,
 }: ProductsTableProps) {
+  const router = useRouter();
   const columns = [
     {
       key: "title",
@@ -82,15 +87,9 @@ export default function ProductsTable({
         type="text"
         name="q"
         defaultValue={search}
-        placeholder="Search by title..."
-        className="h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
+        placeholder="Seach..."
+        className="h-11 sm:w-[300px] sm:min-w-[300px] rounded-lg border border-gray-300 bg-transparent px-4 text-sm text-gray-800 placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90"
       />
-      <button
-        type="submit"
-        className="inline-flex h-11 items-center justify-center rounded-lg bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600"
-      >
-        Search
-      </button>
       {search ? (
         <Link
           href={buildProductsHref(1, limit, "")}
@@ -102,48 +101,25 @@ export default function ProductsTable({
     </form>
   );
 
+  const totalPages =
+    total !== null
+      ? Math.max(1, Math.ceil(total / limit))
+      : hasNext
+        ? page + 1
+        : page;
+
   const footer = (
-    <div className="flex items-center justify-between">
+    <div className="py-4 px-5 flex items-center justify-between">
       <div className="text-sm text-gray-500 dark:text-gray-400">
         {total !== null ? `${total} total` : `${products.length} on this page`}
       </div>
-      <div className="flex items-center gap-2">
-        {hasPrev ? (
-          <Link
-            className="rounded-lg border border-gray-300 px-3.5 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
-            href={buildProductsHref(page - 1, limit, search)}
-          >
-            Prev
-          </Link>
-        ) : (
-          <button
-            className="rounded-lg border border-gray-300 px-3.5 py-2 text-sm text-gray-400 dark:border-gray-700"
-            disabled
-          >
-            Prev
-          </button>
-        )}
-
-        <span className="px-2 text-sm text-gray-500 dark:text-gray-400">
-          Page {page}
-        </span>
-
-        {hasNext ? (
-          <Link
-            className="rounded-lg border border-gray-300 px-3.5 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-white/5"
-            href={buildProductsHref(page + 1, limit, search)}
-          >
-            Next
-          </Link>
-        ) : (
-          <button
-            className="rounded-lg border border-gray-300 px-3.5 py-2 text-sm text-gray-400 dark:border-gray-700"
-            disabled
-          >
-            Next
-          </button>
-        )}
-      </div>
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={(nextPage) =>
+          router.push(buildProductsHref(nextPage, limit, search))
+        }
+      />
     </div>
   );
 

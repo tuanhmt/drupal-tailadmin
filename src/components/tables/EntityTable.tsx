@@ -29,14 +29,14 @@ export default function EntityTable<TItem>({
   minWidthClassName = "min-w-[1102px]",
 }: EntityTableProps<TItem>) {
   return (
-    <div className="space-y-4">
+    <div>
       {toolbar ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-white/5 dark:bg-white/3">
+        <div className="border-b border-gray-200 p-4 dark:border-white/5">
           {toolbar}
         </div>
       ) : null}
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/3 dark:bg-white/3">
+      <div className="overflow-hidden border-b border-gray-100 dark:border-white/3">
         <div className="max-w-full overflow-x-auto">
           <div className={minWidthClassName}>
             <Table>

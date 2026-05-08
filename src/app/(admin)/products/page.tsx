@@ -6,6 +6,7 @@ import { JsonApiRequestError } from "@/lib/jsonapi/client";
 import { PUBLIC_PATHS } from "@/lib/auth/constants";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import ComponentCard from "@/components/common/ComponentCard";
+import { DownloadIcon, PlusIcon } from "@/icons";
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -45,15 +46,28 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     return (
       <div>
         <PageBreadcrumb pageTitle="Products" />
-        <div className="mb-6 flex justify-end">
-          <Link
-            href="/products/add"
-            className="inline-flex items-center justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600"
-          >
-            Add New Product
-          </Link>
-        </div>
-        <ComponentCard title="Products">
+        <ComponentCard
+          title="Products List"
+          desc="Track your store's progress to boost your sales."
+          headerActions={
+            <>
+              <button
+                type="button"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-5 py-3.5 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-300 transition hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300"
+              >
+                Export
+                <DownloadIcon className="h-5 w-5" />
+              </button>
+              <Link
+                href="/products/add"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-3 text-sm font-medium text-white transition hover:bg-brand-600"
+              >
+                <PlusIcon className="h-5 w-5" />
+                Add Product
+              </Link>
+            </>
+          }
+        >
           <ProductsTable
             products={products}
             page={pageNum}

@@ -17,10 +17,7 @@ export default function ProductAddPage() {
         </Link>
       </div>
 
-      <ComponentCard
-        title="Product Information"
-        desc="Fill in the form below to create a new product."
-      >
+      <ComponentCard title="Products Description">
         <ProductAddForm />
       </ComponentCard>
     </div>
