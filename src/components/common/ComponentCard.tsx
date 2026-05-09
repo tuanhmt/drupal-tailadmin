@@ -6,6 +6,7 @@ interface ComponentCardProps {
   className?: string; // Additional custom classes for styling
   desc?: string; // Description text
   headerActions?: React.ReactNode;
+  bodyClassName?: string;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
@@ -14,6 +15,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   className = "",
   desc = "",
   headerActions,
+  bodyClassName = "space-y-6",
 }) => {
   return (
     <div
@@ -48,7 +50,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
 
       {/* Card Body */}
       <div>
-        <div className="space-y-6">{children}</div>
+        <div className={bodyClassName}>{children}</div>
       </div>
     </div>
   );
