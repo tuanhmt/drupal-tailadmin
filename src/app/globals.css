@@ -929,3 +929,7 @@ span.flatpickr-weekday,
   border-top-color: var(--color-brand-500) !important;
   border-left-color: var(--color-brand-500) !important;
 }
+
+.col-span-full {
+  grid-column: 1/-1;
+}

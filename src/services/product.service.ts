@@ -56,8 +56,8 @@ export type TStore = JsonApiResource<{ is_default?: boolean; name?: string }>;
  * The service below exposes higher-level methods on top of this.
  */
 export const productCrud = makeJsonApiCrud<TProductAttributes>({
-  resourceType: "commerce_product--default",
-  resourcePath: "commerce_product/default",
+  resourceType: "product--panda",
+  resourcePath: "product/panda",
 });
 
 /**
@@ -103,7 +103,7 @@ export const productService = {
     const res = await jsonApi.getCollection<{ is_default?: boolean; name?: string }>(
       "store",
       {
-        filter: { is_default: true },
+        filter: { is_default: 1 },
         page: { limit: 1, offset: 0 },
       },
       opts,

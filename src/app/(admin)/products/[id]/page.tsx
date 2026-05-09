@@ -113,18 +113,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
               defaultValue={changed ? new Date(changed).toLocaleString() : "-"}
             />
           </div>
-        </div>
-
-        <div>
-          <Label htmlFor="product-description">Description</Label>
-          <textarea
-            id="product-description"
-            rows={8}
-            disabled
-            value={body?.value ?? ""}
-            readOnly
-            className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:text-gray-500 disabled:cursor-not-allowed dark:disabled:bg-gray-800 dark:disabled:text-gray-400"
-          />
+          <div className="col-span-full">
+            <Label htmlFor="product-description">Description</Label>
+            <textarea
+              id="product-description"
+              rows={8}
+              disabled
+              value={body?.value ?? ""}
+              readOnly
+              className="w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 disabled:text-gray-500 disabled:cursor-not-allowed dark:disabled:bg-gray-800 dark:disabled:text-gray-400"
+            />
+          </div>
         </div>
       </ComponentCard>
     </div>

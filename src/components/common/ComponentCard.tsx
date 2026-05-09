@@ -15,7 +15,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   className = "",
   desc = "",
   headerActions,
-  bodyClassName = "space-y-6",
+  bodyClassName = "p-4 sm:p-6 dark:border-gray-800",
 }) => {
   return (
     <div
@@ -49,8 +49,8 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
       </div>
 
       {/* Card Body */}
-      <div>
-        <div className={bodyClassName}>{children}</div>
+      <div className={bodyClassName}>
+        <div>{children}</div>
       </div>
     </div>
   );

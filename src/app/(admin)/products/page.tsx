@@ -67,6 +67,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
               </Link>
             </>
           }
+          bodyClassName="p-0"
         >
           <ProductsTable
             products={products}
