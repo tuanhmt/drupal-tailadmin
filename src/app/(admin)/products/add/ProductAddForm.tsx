@@ -80,7 +80,7 @@ function FormActions() {
   return (
     <div className="flex items-center gap-3">
       <Button size="sm" type="submit" disabled={pending}>
-        {pending ? "Creating..." : "Create product"}
+        {pending ? "Creating..." : "Create Product"}
       </Button>
       <Button asChild size="sm" variant="outline">
         <Link href="/products">Cancel</Link>

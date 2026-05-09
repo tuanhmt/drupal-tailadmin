@@ -70,7 +70,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </Link>
       </div>
 
-      <ComponentCard title="Product Information">
+      <ComponentCard title="Product Information"
+      bodyClassName="p-4 sm:p-6 dark:border-gray-800">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           <div>
             <Label htmlFor="product-title">Title</Label>

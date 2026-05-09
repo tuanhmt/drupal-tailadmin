@@ -26,7 +26,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         className={
           headerActions
             ? "flex flex-col justify-between gap-5 border-b border-gray-200 px-5 py-4 sm:flex-row sm:items-center dark:border-gray-800"
-            : "px-6 py-5"
+            : "border-b border-gray-200 px-6 py-5 dark:border-gray-800"
         }
       >
         <div>
