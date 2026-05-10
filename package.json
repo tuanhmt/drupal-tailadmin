@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "start:debug": "NODE_OPTIONS='--inspect' next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "openapi:generate": "orval --config orval.config.ts",
+    "openapi:pull": "node scripts/openapi-pull.mjs && npm run openapi:generate"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.19",
@@ -24,6 +26,7 @@
     "@tailwindcss/postcss": "^4.1.17",
     "apexcharts": "^4.7.0",
     "autoprefixer": "^10.4.22",
+    "dotenv": "^17.4.2",
     "drupal-jsonapi-params": "^3.0.0",
     "flatpickr": "^4.6.13",
     "next": "16.2.4",
@@ -49,6 +52,7 @@
     "@types/react-transition-group": "^4.4.12",
     "eslint": "^9.39.1",
     "eslint-config-next": "16.0.7",
+    "orval": "^7.21.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
